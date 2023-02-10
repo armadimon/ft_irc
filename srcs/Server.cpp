@@ -1,21 +1,23 @@
-#include "includes/Server.hpp"
+#include "../includes/Server.hpp"
 
 Server::Server()
 {
 }
 
-void Server::acceptClient()
-{
-	int					new_socket;
-	struct sockaddr_in	new_socket_in;
-	socklen_t			new_socket_len;
+Server::~Server() {}
 
-	new_socket_len = sizeof(new_socket_in);
-	new_socket = accept(this->fd, (struct sockaddr *)&new_socket_in, &new_socket_len);
-	clients[new_socket] = Client(new_socket);
-}
+// void Server::acceptClient()
+// {
+// 	int					new_socket;
+// 	struct sockaddr_in	new_socket_in;
+// 	socklen_t			new_socket_len;
 
-void Server::createSocket(int port)
+// 	new_socket_len = sizeof(new_socket_in);
+// 	new_socket = accept(this->fd, (struct sockaddr *)&new_socket_in, &new_socket_len);
+// 	clients[new_socket] = Client(new_socket);
+// }
+
+void Server::createSocket()
 {
 	int					socket_fd;
 	struct sockaddr_in	socket_in;
@@ -23,17 +25,26 @@ void Server::createSocket(int port)
 
 	pe = getprotobyname("tcp");
 	if (pe == NULL)
-		throw ServerException(std::string("error: getprotobyname"));
+		throw std::runtime_error("error: getprotobyname");
 	socket_in.sin_family = AF_INET;
 	socket_in.sin_addr.s_addr = INADDR_ANY;
 	socket_in.sin_port = htons(this->port);
 	socket_fd = socket(PF_INET, SOCK_STREAM, pe->p_proto);
 	if (socket_fd == -1)
-		throw ServerException(std::string("error: socket"));
+		throw std::runtime_error("error: socket");
 	if (bind(socket_fd, (struct sockaddr*)&socket_in, sizeof(socket_in)) == -1)
-		throw ServerException(std::string("Error: bind"));
+		throw std::runtime_error("Error: bind");
 	if (listen(socket_fd, 42) == -1)
-		throw ServerException(std::string("error: listen"));
+		throw std::runtime_error("error: listen");
+}
+
+void Server::start()
+{
+	createSocket();
+	// while (true)
+	// {
+	// 	// acceptClient();
+	// }
 }
 
 void Server::setPass(char *pw)

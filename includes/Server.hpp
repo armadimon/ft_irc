@@ -22,8 +22,9 @@ class Server
 	void setClient(std::map<int, Client> c);
 	void setPass(char *pw);
 	void setPort(char *port);
-	void createSocket(int port);
+	void createSocket();
 	void acceptClient();
+	void start();
 
   private:
 	int			fd;
