@@ -3,7 +3,7 @@
 Server::Server()
 {
 	this->is_set = 0;
-	this->fd_num = 0;
+	this->fd = 0;
 
 	FD_ZERO(&read_fds);
 	FD_ZERO(&write_fds);
@@ -26,7 +26,6 @@ void Server::acceptClient()
 
 void Server::createSocket()
 {
-	int					socket_fd;
 	struct sockaddr_in	socket_in;
 	struct protoent		*pe;
 
@@ -36,20 +35,19 @@ void Server::createSocket()
 	socket_in.sin_family = AF_INET;
 	socket_in.sin_addr.s_addr = INADDR_ANY;
 	socket_in.sin_port = htons(this->port);
-	socket_fd = socket(PF_INET, SOCK_STREAM, pe->p_proto);
-	if (socket_fd == -1)
+	fd = socket(PF_INET, SOCK_STREAM, pe->p_proto);
+	if (fd == -1)
 		throw std::runtime_error("error: socket");
-	fcntl(socket_fd, F_SETFL, O_NONBLOCK);
-	if (bind(socket_fd, (struct sockaddr*)&socket_in, sizeof(socket_in)) == -1)
+	fcntl(fd, F_SETFL, O_NONBLOCK);
+	if (bind(fd, (struct sockaddr*)&socket_in, sizeof(socket_in)) == -1)
 		throw std::runtime_error("Error: bind");
-	if (listen(socket_fd, 42) == -1)
+	if (listen(fd, 42) == -1)
 		throw std::runtime_error("error: listen");
-	
-	FD_SET(socket_fd, &read_fds);
+	FD_SET(fd, &read_fds);
 }
 
 void Server::doSelect() {
-	is_set = select(MAX_FD, &read_fds, &write_fds, NULL, NULL);
+	is_set = select(fd + 1, &read_fds, &write_fds, NULL, NULL);
 }
 
 void Server::start()
