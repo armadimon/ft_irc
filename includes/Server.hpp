@@ -8,6 +8,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <sys/select.h>
+#include <fcntl.h>
 
 #include "Client.hpp"
 
@@ -23,12 +25,17 @@ class Server
 	void setPass(char *pw);
 	void setPort(char *port);
 	void createSocket();
+	void doSelect();
 	void acceptClient();
 	void start();
 
   private:
 	int			fd;
+	int			fd_num;
 	int			port;
+	int			is_set;
+	fd_set		read_fds;
+	fd_set		write_fds;
 	std::map<int, Client> clients;
 	std::string password; // 서버 패스워드
 };
