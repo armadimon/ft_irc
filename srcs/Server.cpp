@@ -22,6 +22,8 @@ void Server::acceptClient()
 	if (new_socket == -1)
 		throw std::runtime_error("error: accept");
 	clients[new_socket] = Client(new_socket);
+	std::cout << &(clients[new_socket]) << std::endl;
+	FD_SET(new_socket, &read_fds);
 }
 
 void Server::createSocket()
@@ -60,8 +62,13 @@ void Server::start()
 		int i = 0;
 		while (i < MAX_FD && is_set > 0)
 		{
-			if (FD_ISSET(i, &read_fds))
+			std::cout << i << std::endl;
+			if (FD_ISSET(i, &read_fds) && i != fd)
+			{
+			std::cout << &clients[i] << std::endl;
 				clients[i].clientRead();
+				is_set--;
+			}
 			i++;
 		}
 	}
