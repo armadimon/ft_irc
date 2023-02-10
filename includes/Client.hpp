@@ -22,7 +22,7 @@ class Client
 	private :
 		// bool	_isOperator; //방장이면 true
 		int		fd;
-		char	*bufRead[4096];
+		char	bufRead[4096];
     // ...
 		//TODO : 사용되는 이름 조사하기
 		// std::vector<Channel> _myChannelList;
