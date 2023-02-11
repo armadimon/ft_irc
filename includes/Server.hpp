@@ -20,14 +20,16 @@ class Server
   public:
 	Server();
 	~Server();
-	Client getClient();
+	Client *getClient(int client_fd);
 	void setClient(std::map<int, Client> c);
+	void clientRead(int client_fd);
 	void setPass(char *pw);
 	void setPort(char *port);
 	void createSocket();
 	void doSelect();
 	void acceptClient();
 	void start();
+
 
   private:
 	int			fd;
