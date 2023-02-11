@@ -21,8 +21,10 @@ void Server::acceptClient()
 	new_socket = accept(this->fd, (struct sockaddr *)&new_socket_in, &new_socket_len);
 	if (new_socket == -1)
 		throw std::runtime_error("error: accept");
-	clients[new_socket] = Client(new_socket);
-	std::cout << &(clients[new_socket]) << std::endl;
+	clients[new_socket] = new Client(new_socket);
+	std::cout << new_socket << std::endl;
+	if (new_socket > fd_max)
+		fd_max = new_socket;
 	FD_SET(new_socket, &read_fds);
 }
 
@@ -46,10 +48,12 @@ void Server::createSocket()
 	if (listen(fd, 42) == -1)
 		throw std::runtime_error("error: listen");
 	FD_SET(fd, &read_fds);
+	fd_max = fd;
 }
 
 void Server::doSelect() {
-	is_set = select(fd + 1, &read_fds, &write_fds, NULL, NULL);
+	is_set = select(fd_max + 1, &cpy_read_fds, &write_fds, NULL, NULL);
+	std::cout << "is set : " << is_set << std::endl;
 }
 
 void Server::start()
@@ -57,17 +61,28 @@ void Server::start()
 	createSocket();
 	while (true)
 	{
+		std::cout << "check" << std::endl;
+		cpy_read_fds = read_fds;
 		doSelect();
-		acceptClient();
 		int i = 0;
 		while (i < MAX_FD && is_set > 0)
 		{
-			std::cout << i << std::endl;
-			if (FD_ISSET(i, &read_fds) && i != fd)
+			
+		std::cout << i << std::endl;
+
+			if (FD_ISSET(i, &cpy_read_fds))
 			{
-			std::cout << &clients[i] << std::endl;
-				clients[i].clientRead();
-				is_set--;
+				if (i == this->fd)
+				{
+					acceptClient();
+					is_set--;
+				}
+				else
+				{
+					std::cout << &clients[i] << std::endl;
+					clients[i]->clientRead();
+					is_set--;
+				}
 			}
 			i++;
 		}
