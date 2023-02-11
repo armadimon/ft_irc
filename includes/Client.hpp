@@ -13,7 +13,8 @@ class Client
 		Client();
 		Client(int fd);
 		~Client();
-		void clientRead();
+		char	*getBuf();
+		int		getFD();
         // Channel	getmyChannelList();
 		// void	setmyChannelList();
 		    // getter, setter

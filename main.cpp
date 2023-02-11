@@ -13,8 +13,8 @@ int main(int argc, char** argv) {
     try {
         server.start();
     }
-    catch (std::exception &e) {
-        e.what();
+    catch (std::runtime_error &e) {
+        std::cout << e.what() << std::endl;
     }
 
     return 0;
