@@ -8,6 +8,7 @@ SRC =	main.cpp \
 		srcs/Utils.cpp \
 		srcs/Client.cpp \
 		srcs/Server.cpp \
+		srcs/Channel.cpp \
 		srcs/command/Pass.cpp \
 		srcs/command/User.cpp \
 		srcs/command/Nick.cpp \
