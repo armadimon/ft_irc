@@ -37,3 +37,13 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 * User state 추가
 
 ### TODO
+
+* client 인증 시스템 보완 - 현재 state는
+   1. DEFAULT,
+   2.	PWSET,
+   3.	REGISTER,
+   4.	UNREGISTER,
+
+
+   4개로 구성되어있고, 커맨드 구현하면서 state에 대한 구분을 더 세부적으로 해야할 수도있음.
+  
