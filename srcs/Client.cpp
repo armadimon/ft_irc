@@ -42,7 +42,9 @@ int	Client::parseMSG(std::string tempStr)
 		std::cout << "check 1" << std::endl;
 		std::vector<std::string> trailing = string_split(tempStr, ":"); 
 		this->msg = string_split(trailing[0], " "); 
-		this->msg.push_back(trailing[1]);
+		std::string tempStr = ":";
+		tempStr += trailing[1];
+		this->msg.push_back(tempStr);
 	}
 	else
 		this->msg = string_split(tempStr, " ");
