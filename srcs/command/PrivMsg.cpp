@@ -18,10 +18,7 @@ void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 		for (; it < str.end(); it++)
 		{
 			temp += *it;
-			// if (cnt > 1)
-			// {
-			// 	if ()
-			// }
+			temp += " ";
 		}
 		send(c->getFD(), temp.c_str(), temp.size(), 0);
 	}
