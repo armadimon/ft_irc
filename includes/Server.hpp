@@ -28,7 +28,7 @@ class Server
 	void createSocket();
 	void doSelect();
 	void acceptClient();
-	void start();
+	void run();
 
 
   private:

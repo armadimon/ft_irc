@@ -6,15 +6,35 @@
 # include <iostream>
 # include <sys/socket.h>
 # include <unistd.h>
+# include <vector>
+
+enum State
+{
+	UNREGISTER,
+	REGISTER,
+};
 
 class Client
 {
     public : 
+		std::map<std::string, void(*)(Client *, std::vector<std::string>)> cmdList;
+	
 		Client();
 		Client(int fd);
 		~Client();
 		char	*getBuf();
 		int		getFD();
+		int		parseMSG(std::string tempStr);
+		void	registerClient();
+		void	excute();
+		void	setRealName(std::string str);
+		void	setNickName(std::string str);
+		void	setUserName(std::string str);
+		void	setHostName(std::string str);
+		std::string getUserName();
+		std::string getNickName();
+		std::string getHostName();
+		std::string getRealName();
         // Channel	getmyChannelList();
 		// void	setmyChannelList();
 		    // getter, setter
@@ -23,6 +43,15 @@ class Client
 	private :
 		// bool	_isOperator; //방장이면 true
 		int		fd;
+		int		passwd;
+		State	userState;
+		std::vector<std::string> msg;
+		std::string hostName;
+		std::string nickName;
+		std::string userName;
+		std::string realName;
+		
+		// std::string
 		char	bufRead[4096];
     // ...
 		//TODO : 사용되는 이름 조사하기

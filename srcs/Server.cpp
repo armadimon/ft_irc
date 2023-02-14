@@ -26,6 +26,7 @@ void Server::acceptClient()
 	if (new_socket > fd_max)
 		fd_max = new_socket;
 	FD_SET(new_socket, &read_fds);
+	FD_SET(new_socket, &write_fds);
 }
 
 void Server::createSocket()
@@ -52,7 +53,8 @@ void Server::createSocket()
 }
 
 void Server::doSelect() {
-	is_set = select(fd_max + 1, &cpy_read_fds, &write_fds, NULL, NULL);
+	is_set = select(fd_max + 2, &cpy_read_fds, &cpy_write_fds, NULL, NULL);
+	// std::cout << "is_set : " << is_set << std::endl;
 	if (is_set == -1)
 		throw std::runtime_error("Error: select");
 }
@@ -67,23 +69,30 @@ void Server::clientRead(int client_fd)
   	if (r <= 0)
     {
 		FD_CLR(client_fd, &read_fds);
+		FD_CLR(client_fd, &write_fds);
     	close(client_fd);
     	printf("client #%d gone away\n", client_fd);
     }
+	std::string tempStr(bufRead);
+	memset(bufRead, 0, 4096);
+	this->clients[client_fd]->parseMSG(tempStr);
+	this->clients[client_fd]->excute();
 }
 
-void Server::start()
+void Server::run()
 {
 	createSocket();
 	while (true)
 	{
 		cpy_read_fds = read_fds;
+		cpy_write_fds = write_fds;
 		doSelect();
 		int i = 0;
-		while (i < MAX_FD && is_set > 0)
+		while (i < fd_max + 1 && is_set > 0)
 		{
 			if (FD_ISSET(i, &cpy_read_fds))
 			{
+				std::cout << "check" << std::endl;
 				if (i == this->fd)
 				{
 					acceptClient();

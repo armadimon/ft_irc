@@ -5,8 +5,12 @@ CXX = c++
 FLAGS = -g -Wall -Wextra -Werror -std=c++98
 
 SRC =	main.cpp \
+		srcs/Utils.cpp \
 		srcs/Client.cpp \
-		srcs/Server.cpp
+		srcs/Server.cpp \
+		srcs/command/Pass.cpp \
+		srcs/command/User.cpp \
+		srcs/command/Nick.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 
