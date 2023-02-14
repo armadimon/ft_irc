@@ -23,6 +23,7 @@ class Server
 	Client *getClient(int client_fd);
 	void setClient(std::map<int, Client> c);
 	void clientRead(int client_fd);
+	std::string	getPass();
 	void setPass(char *pw);
 	void setPort(char *port);
 	void createSocket();

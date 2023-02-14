@@ -11,6 +11,7 @@ SRC =	main.cpp \
 		srcs/command/Pass.cpp \
 		srcs/command/User.cpp \
 		srcs/command/Nick.cpp \
+		srcs/command/PrivMsg.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 

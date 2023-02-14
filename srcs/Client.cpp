@@ -2,17 +2,19 @@
 
 std::vector<std::string> string_split(std::string str, const char* delimiter);
 
-void	cmdPass(Client *c, std::vector<std::string> str);
-void	cmdUser(Client *c, std::vector<std::string> str);
-void	cmdNick(Client *c, std::vector<std::string> str);
+void	cmdPass(Server *s, int fd, std::vector<std::string> str);
+void	cmdUser(Server *s, int fd, std::vector<std::string> str);
+void	cmdNick(Server *s, int fd, std::vector<std::string> str);
+void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str);
 
 Client::Client(int fd)
-	:fd(fd)
+	:fd(fd), userState(DEFAULT)
 {
 	// fcntl(fd, F_SETFL, O_NONBLOCK);
 	cmdList["PASS"] = cmdPass;
 	cmdList["USER"] = cmdUser;
 	cmdList["NICK"] = cmdNick;
+	cmdList["PRIVMSG"] = cmdPrivMsg;
 }
 
 Client::Client()
@@ -40,7 +42,9 @@ int	Client::parseMSG(std::string tempStr)
 		std::cout << "check 1" << std::endl;
 		std::vector<std::string> trailing = string_split(tempStr, ":"); 
 		this->msg = string_split(trailing[0], " "); 
-		this->msg.push_back(trailing[1]);
+		std::string tempStr = ":";
+		tempStr += trailing[1];
+		this->msg.push_back(tempStr);
 	}
 	else
 		this->msg = string_split(tempStr, " ");
@@ -54,7 +58,7 @@ int	Client::parseMSG(std::string tempStr)
 	return (0); 
 }
 
-void	Client::excute()
+void	Client::excute(Server *server)
 {
 	// prefix | command | param - ( middle trailing)
 	// map<std::string, void(*)(Client &)> = cmdlist;
@@ -64,7 +68,7 @@ void	Client::excute()
 	// 	if (msg)
 	// 	it++;
 	// }
-	cmdList[*(msg.begin())](this, msg);
+	cmdList[*(msg.begin())](server, this->getFD(), msg);
 	// registerClient();
 }
 
@@ -105,6 +109,11 @@ std::string Client::getRealName()
 	return (this->realName);
 }
 
+State		Client::getUserState()
+{
+	return (this->userState);
+}
+
 void Client::setUserName(std::string str)
 {
 	userName = str;
@@ -123,4 +132,9 @@ void Client::setHostName(std::string str)
 void Client::setRealName(std::string str)
 {
 	realName = str;
+}
+
+void Client::setUserState()
+{
+	userState = REGISTER;
 }

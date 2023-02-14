@@ -10,14 +10,18 @@
 
 enum State
 {
-	UNREGISTER,
+	DEFAULT,
+	PWSET,
 	REGISTER,
+	UNREGISTER,
 };
+
+class Server;
 
 class Client
 {
     public : 
-		std::map<std::string, void(*)(Client *, std::vector<std::string>)> cmdList;
+		std::map<std::string, void(*)(Server *, int, std::vector<std::string>)> cmdList;
 	
 		Client();
 		Client(int fd);
@@ -26,15 +30,17 @@ class Client
 		int		getFD();
 		int		parseMSG(std::string tempStr);
 		void	registerClient();
-		void	excute();
+		void	excute(Server *server);
 		void	setRealName(std::string str);
 		void	setNickName(std::string str);
 		void	setUserName(std::string str);
 		void	setHostName(std::string str);
+		void	setUserState();
 		std::string getUserName();
 		std::string getNickName();
 		std::string getHostName();
 		std::string getRealName();
+		State		getUserState();
         // Channel	getmyChannelList();
 		// void	setmyChannelList();
 		    // getter, setter
