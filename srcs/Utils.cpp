@@ -10,9 +10,9 @@ std::vector<std::string> string_split(std::string str, const char* delimiter)
 	std::vector<std::string> res;
 	char* cstr = const_cast<char*>(str.c_str());
 	char* temp;
-	std::cout << "temp [" << temp << "]" << std::endl;
-	std::cout << "temp len : "<< strlen(temp) << std::endl;
 	temp = strtok(cstr, delimiter);
+	// std::cout << "temp [" << temp << "]" << std::endl;
+	// std::cout << "temp len : "<< strlen(temp) << std::endl;
 	while (temp != NULL)
 	{
 		// std::cout << "temp" << temp << std::endl;

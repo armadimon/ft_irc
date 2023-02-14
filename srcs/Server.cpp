@@ -76,7 +76,7 @@ void Server::clientRead(int client_fd)
 	std::string tempStr(bufRead);
 	memset(bufRead, 0, 4096);
 	this->clients[client_fd]->parseMSG(tempStr);
-	this->clients[client_fd]->excute();
+	this->clients[client_fd]->excute(this);
 }
 
 void Server::run()
@@ -119,6 +119,10 @@ Client *Server::getClient(int client_fd)
 	return (this->clients[client_fd]);
 }
 
+std::string	Server::getPass()
+{
+	return(password);
+}
 
 /*
 METHOD :: SETTER
@@ -126,7 +130,7 @@ METHOD :: SETTER
 
 void Server::setPass(char *pw)
 {
-	this->password = atoi(pw);
+	this->password = pw;
 }
 
 void Server::setPort(char *port)
