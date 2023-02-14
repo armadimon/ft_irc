@@ -34,3 +34,6 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 ### 2월 14일 (화)
 * Channel 클래스 작성
 * 커맨드 실행을 함수 포인터로 구현
+* User state 추가
+
+### TODO
