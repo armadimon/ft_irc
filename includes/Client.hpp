@@ -17,6 +17,8 @@ enum State
 class Client
 {
     public : 
+		std::map<std::string, void(*)(Client *, std::vector<std::string>)> cmdList;
+	
 		Client();
 		Client(int fd);
 		~Client();
@@ -25,6 +27,14 @@ class Client
 		int		parseMSG(std::string tempStr);
 		void	registerClient();
 		void	excute();
+		void	setRealName(std::string str);
+		void	setNickName(std::string str);
+		void	setUserName(std::string str);
+		void	setHostName(std::string str);
+		std::string getUserName();
+		std::string getNickName();
+		std::string getHostName();
+		std::string getRealName();
         // Channel	getmyChannelList();
 		// void	setmyChannelList();
 		    // getter, setter

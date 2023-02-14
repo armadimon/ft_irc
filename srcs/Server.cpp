@@ -76,7 +76,7 @@ void Server::clientRead(int client_fd)
 	std::string tempStr(bufRead);
 	memset(bufRead, 0, 4096);
 	this->clients[client_fd]->parseMSG(tempStr);
-	// this->clients[client_fd]->excute();
+	this->clients[client_fd]->excute();
 }
 
 void Server::run()
