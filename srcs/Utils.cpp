@@ -3,7 +3,7 @@
 #include <cstring>
 #include <vector>
 
-#include "../includes/Client.hpp"
+#include "../includes/Utils.hpp"
 
 std::vector<std::string> string_split(std::string str, const char* delimiter)
 {
