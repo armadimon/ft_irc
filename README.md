@@ -36,6 +36,10 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 * 커맨드 실행을 함수 포인터로 구현
 * User state 추가
 
+### 2월 15일 (수)
+* JOIN 커맨드 임시 구현
+* Server, Channel, Client에 필요한 멤버 추가하기 
+
 ### TODO
 
 * client 인증 시스템 보완 - 현재 state는
@@ -46,4 +50,5 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 
 
    4개로 구성되어있고, 커맨드 구현하면서 state에 대한 구분을 더 세부적으로 해야할 수도있음.
-  
+
+* 프라이빗 메시지, JOIN 완성, 채널 기능 완성
