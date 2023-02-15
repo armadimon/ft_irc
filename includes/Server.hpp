@@ -11,9 +11,14 @@
 #include <sys/select.h>
 #include <fcntl.h>
 
+
 #include "Client.hpp"
+#include "Utils.hpp"
+#include "Channel.hpp"
 
 #define MAX_FD	1024
+
+class Channel;
 
 class Server
 {
@@ -21,6 +26,9 @@ class Server
 	Server();
 	~Server();
 	Client *getClient(int client_fd);
+	std::map<int, Client *> getClients();
+	std::map<std::string, Channel *> getChannel();
+	void addChannel();
 	void setClient(std::map<int, Client> c);
 	void clientRead(int client_fd);
 	std::string	getPass();
@@ -42,7 +50,10 @@ class Server
 	fd_set		cpy_write_fds;
 	fd_set		read_fds;
 	fd_set		write_fds;
+
 	std::map<int, Client *> clients;
+	std::map<std::string, Channel *> channels;
+
 	std::string password; // 서버 패스워드
 };
 
