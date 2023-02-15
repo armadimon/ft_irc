@@ -1,20 +1,21 @@
 #include "../includes/Client.hpp"
-
-std::vector<std::string> string_split(std::string str, const char* delimiter);
+// #include ""
 
 void	cmdPass(Server *s, int fd, std::vector<std::string> str);
 void	cmdUser(Server *s, int fd, std::vector<std::string> str);
 void	cmdNick(Server *s, int fd, std::vector<std::string> str);
 void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str);
+void	cmdJoin(Server *s, int fd, std::vector<std::string> str);
 
 Client::Client(int fd)
 	:fd(fd), userState(DEFAULT)
 {
-	// fcntl(fd, F_SETFL, O_NONBLOCK);
+	fcntl(fd, F_SETFL, O_NONBLOCK);
 	cmdList["PASS"] = cmdPass;
 	cmdList["USER"] = cmdUser;
 	cmdList["NICK"] = cmdNick;
 	cmdList["PRIVMSG"] = cmdPrivMsg;
+	cmdList["JOIN"] = cmdJoin;
 }
 
 Client::Client()
@@ -68,6 +69,7 @@ void	Client::excute(Server *server)
 	// 	if (msg)
 	// 	it++;
 	// }
+	std::cout << "msg : " << *(msg.begin()) << std::endl;
 	cmdList[*(msg.begin())](server, this->getFD(), msg);
 	// registerClient();
 }
@@ -81,6 +83,11 @@ void	Client::excute(Server *server)
 // 		userState = REGISTER;
 // }
 
+
+void	Client::addmyChannelList(std::string channel_name)
+{
+	this->myChannelList.push_back(channel_name);
+}
 
 char	*Client::getBuf()
 {
@@ -112,6 +119,11 @@ std::string Client::getRealName()
 State		Client::getUserState()
 {
 	return (this->userState);
+}
+
+std::vector<std::string>	Client::getmyChannelList()
+{
+	return (this->myChannelList);
 }
 
 void Client::setUserName(std::string str)
