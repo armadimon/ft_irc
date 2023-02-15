@@ -5,16 +5,22 @@
 #include <string>
 #include <map>
 #include <utility>
+
 #include "Server.hpp"
 #include "Client.hpp"
+#include "Utils.hpp"
+
+class Client;
 
 class Channel
 {
   public:
 	Channel();
-	Channel(std::string n);
+	Channel(std::string n, int user_fd);
 	~Channel();
+	int getOperatorFD();
 	std::string getChannelName();
+	std::string getPassword();
 	std::map<int, Client*> getClientList();
 	void addClient(int fd, Client* client);
 	void removeClient(int fd);
@@ -22,6 +28,8 @@ class Channel
 
   private:
 	std::string	name;
+	std::string passwd;
+	int oper_fd;
 	std::map<int, Client*> client_list;
 };
 

@@ -124,6 +124,16 @@ std::string	Server::getPass()
 	return(password);
 }
 
+std::map<int, Client *> Server::getClients()
+{
+	return (clients);
+}
+
+std::map<std::string, Channel *> Server::getChannel()
+{
+	return (channels);
+}
+
 /*
 METHOD :: SETTER
 */
