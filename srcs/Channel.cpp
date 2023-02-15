@@ -1,14 +1,24 @@
 #include "../includes/Channel.hpp"
 
-Channel::Channel() : name(), client_list() {}
+Channel::Channel() : name(), passwd(), oper_fd(), client_list() {}
 
-Channel::Channel(std::string n) : name(n), client_list() {}
+Channel::Channel(std::string n, int user_fd) : name(n), oper_fd(user_fd), client_list() {}
 
 Channel::~Channel() {}
 
 std::string Channel::getChannelName()
 {
 	return this->name;
+}
+
+std::string Channel::getPassword()
+{
+	return this->passwd;
+}
+
+int Channel::getOperatorFD()
+{
+	return this->oper_fd;
 }
 
 std::map<int, Client*> Channel::getClientList()
