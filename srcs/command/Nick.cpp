@@ -1,5 +1,3 @@
-#include "../../includes/Server.hpp"
-
 void	cmdNick(Server *s, int fd, std::vector<std::string> str)
 {
 	std::vector<std::string>::iterator it = str.begin();
@@ -14,7 +12,10 @@ void	cmdNick(Server *s, int fd, std::vector<std::string> str)
 		{
 		std::cout << "nick cmd : " << *it << std::endl;
 			if (cnt == 1)
-				c->setNickName(*it);
+			{
+				int endPos = it->find_last_not_of("\n\r");
+					c->setNickName(it->substr(0, endPos +1));
+			}
 			cnt++;
 		}
 	std::cout << "nick cmd : " << c->getNickName() << std::endl;

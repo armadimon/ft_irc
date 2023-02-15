@@ -9,10 +9,7 @@ SRC =	main.cpp \
 		srcs/Client.cpp \
 		srcs/Server.cpp \
 		srcs/Channel.cpp \
-		srcs/command/Pass.cpp \
-		srcs/command/User.cpp \
-		srcs/command/Nick.cpp \
-		srcs/command/PrivMsg.cpp \
+		srcs/Command.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 
