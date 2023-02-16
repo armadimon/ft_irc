@@ -13,4 +13,10 @@
 
 std::vector<std::string> string_split(std::string str, const char* delimiter);
 
+std::string &ltrim(std::string &s, std::string delimiter);
+
+std::string &rtrim(std::string &s, std::string delimiter);
+
+const std::string &trim(std::string &s, std::string delimiter);
+
 #endif
