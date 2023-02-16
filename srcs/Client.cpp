@@ -151,3 +151,13 @@ void Client::setUserState()
 {
 	userState = REGISTER;
 }
+
+void	Client::removeChannelFromList(std::string channel_name)
+{
+	std::vector<std::string>::iterator it = this->myChannelList.begin();
+	for (; it < this->myChannelList.end(); it++)
+	{
+		if (channel_name == *it)
+			this->myChannelList.erase(it);
+	}
+}
