@@ -30,13 +30,6 @@ int	Client::parseMSG(std::string tempStr)
 {
 	if (tempStr.empty()) return (1);
 
-	std::vector<std::string>::iterator it = this->msg.begin();
-	for (; it < this->msg.end(); it++)
-	{
-		(*it).clear();
-	}
-	msg.clear();
-	msg.reserve(0);
 	// this->msg = string_split(tempStr, " ");
 	if (tempStr.find_first_of(":") != std::string::npos)
 	{
@@ -61,18 +54,18 @@ int	Client::parseMSG(std::string tempStr)
 
 void	Client::excute(Server *server)
 {
-	// prefix | command | param - ( middle trailing)
-	// map<std::string, void(*)(Client &)> = cmdlist;
-	// std::vector<std::string>::iterator it = this->msg.begin();
-	// while (it != this->msg.end())
-	// {
-	// 	if (msg)
-	// 	it++;
-	// }
 	std::cout << "msg : " << *(msg.begin()) << std::endl;
 	if (cmdList.find(*(msg.begin())) != cmdList.end())
 		cmdList[*(msg.begin())](server, this->getFD(), msg);
 	// registerClient();
+	std::vector<std::string>::iterator it = this->msg.begin();
+	for (; it < this->msg.end(); it++)
+	{
+		(*it).clear();
+		std::cout << "clean msg : " << *it << std::endl;
+	}
+	msg.clear();
+	msg.reserve(0);
 }
 
 // void	Client::registerClient() // 매개변수에 server class를 넣을 것인가 아니()

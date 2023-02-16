@@ -134,6 +134,14 @@ std::map<std::string, Channel *> Server::getChannel()
 	return (channels);
 }
 
+
+void Server::setChannel(std::string chName, int fd)
+{
+
+	this->channels.insert(std::pair<std::string, Channel *>(chName, new Channel(chName, fd)));
+}
+
+
 /*
 METHOD :: SETTER
 */
