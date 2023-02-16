@@ -70,7 +70,8 @@ void	Client::excute(Server *server)
 	// 	it++;
 	// }
 	std::cout << "msg : " << *(msg.begin()) << std::endl;
-	cmdList[*(msg.begin())](server, this->getFD(), msg);
+	if (cmdList.find(*(msg.begin())) != cmdList.end())
+		cmdList[*(msg.begin())](server, this->getFD(), msg);
 	// registerClient();
 }
 
