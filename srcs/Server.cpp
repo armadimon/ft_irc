@@ -147,3 +147,10 @@ void Server::setPort(char *port)
 {
 	this->port = atoi(port);
 }
+
+bool Server::isExistChannel(std::string channel_name)
+{
+	if (this->channels.find(channel_name) == this->channels.end())
+		return false;
+	return true;
+}
