@@ -38,7 +38,7 @@ class Server
 	void doSelect();
 	void acceptClient();
 	void run();
-
+	bool isExistChannel(std::string channel_name);
 
   private:
 	int			fd;
