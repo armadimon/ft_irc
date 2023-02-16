@@ -1,11 +1,10 @@
-#include "../../includes/Server.hpp"
+#include "../../includes/Command.hpp"
 
 void	cmdUser(Server *s, int fd, std::vector<std::string> str)
 {
 	std::vector<std::string>::iterator it = str.begin();
 	Client *c = s->getClient(fd);
 	int cnt = 0;
-
 
 	if (c->getUserState() == REGISTER)
 	{

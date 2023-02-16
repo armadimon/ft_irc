@@ -1,5 +1,4 @@
-#include "../../includes/Server.hpp"
-
+#include "../../includes/Command.hpp"
 
 void	cmdPass(Server *s, int fd, std::vector<std::string> str)
 {

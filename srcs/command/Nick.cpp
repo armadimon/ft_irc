@@ -1,3 +1,5 @@
+#include "../../includes/Command.hpp"
+
 void	cmdNick(Server *s, int fd, std::vector<std::string> str)
 {
 	std::vector<std::string>::iterator it = str.begin();

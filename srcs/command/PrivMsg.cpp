@@ -1,4 +1,4 @@
-#include "../../includes/Server.hpp"
+#include "../../includes/Command.hpp"
 
 void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 {
@@ -36,7 +36,8 @@ void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 				}
 			}
 			temp += *it;
-			temp += " ";
+			if (cnt != 2)
+				temp += " ";
 			cnt++;
 		}
 		std::vector<int>::iterator vecIter = reciver.begin();
