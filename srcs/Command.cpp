@@ -176,6 +176,7 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 				c->addmyChannelList(channels_name[i]);
 				// 해당 클라이언트가 join했다고 채널에 메세지 날리기
 			}
+
 			std::string nameReply = "353 ";
 			std::string eonReply = "363 ";
 			nameReply += tempCh[channels_name[0]]->getChannelName();
@@ -183,6 +184,23 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 			nameReply += " :";
 			eonReply += " :End of NAMES list\r\n";
 			std::map<int, Client *> tempClient = s->getClients();
+
+			std::string	prefix = ":";
+			prefix += c->getNickName();
+			prefix += "!";
+			prefix += c->getUserName();
+			prefix += "@";
+			prefix += c->getHostName();
+			prefix += " ";
+
+			std::vector<std::string>::iterator msgIter = str.begin();
+			while (msgIter < str.end())
+			{
+				prefix += *msgIter;
+				msgIter++;
+				if (msgIter != str.end())
+					prefix += " ";
+			}
 			std::map<int, Client *>::iterator clientIter = tempClient.begin();
 			for (;clientIter != tempClient.end(); clientIter++)
 			{
@@ -195,9 +213,12 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 			for (;clientIter != tempClient.end(); clientIter++)
 			{
 				int	cFd = clientIter->second->getFD();
-				send(cFd, ":juahn!juahn@* JOIN #temp\r\n", strlen("juahn!juahn@* JOIN #temp\r\n"), 0);
+				// nickname, username, hostname;
+				std::cout << prefix << std::endl;
+				send(cFd, prefix.c_str(), prefix.size(), 0);
 				// 요청한 클라이언트에게만 reply
-				send(cFd, nameReply.c_str(), nameReply.size(), 0);
+				if (cFd == fd)
+					send(cFd, nameReply.c_str(), nameReply.size(), 0);
 				send(cFd, eonReply.c_str(), eonReply.size(), 0);
 			}
 		}
