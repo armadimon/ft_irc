@@ -16,6 +16,7 @@ Client::Client(int fd)
 	cmdList["NICK"] = cmdNick;
 	cmdList["PRIVMSG"] = cmdPrivMsg;
 	cmdList["JOIN"] = cmdJoin;
+	cmdList["KICK"] = cmdKick;
 }
 
 Client::Client()

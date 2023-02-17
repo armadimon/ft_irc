@@ -24,6 +24,7 @@ class Channel
 	std::map<int, Client*> getClientList();
 	void addClient(int fd, Client* client);
 	void removeClient(int fd);
+	void removeClient(std::string name);
 	// 채널로 PRIVMSG를 보내면, 채널이 해당 내용을 client_list에 PRIVMSG를 보내주는 함수
 
   private:

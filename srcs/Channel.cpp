@@ -37,3 +37,13 @@ void Channel::removeClient(int fd)
 {
 	this->client_list.erase(fd);
 }
+
+void Channel::removeClient(std::string name)
+{
+	std::map<int, Client*>::iterator it = this->client_list.begin();
+	for (; it != this->client_list.end(); it++)
+	{
+		if (name == (*it).second->getNickName())
+			this->client_list.erase(it);
+	}
+}
