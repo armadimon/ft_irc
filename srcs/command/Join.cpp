@@ -34,6 +34,8 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 		std::vector<std::string>::iterator msgIter = str.begin();
 		while (msgIter < str.end())
 		{
+			if ((*msgIter).find("#") != std::string::npos)
+				prefix += ":";
 			prefix += *msgIter;
 			msgIter++;
 			if (msgIter != str.end())
@@ -48,6 +50,7 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 		std::cout << channels_name.size() << std::endl;
 		for (size_t i = 0; i < channels_name.size(); i++)
 		{
+			
 			std::cout << "[" << channels_name[i] << "]" << std::endl;
 			// 서버에 채널이 생성되어 있는지 확인
 			std::map<std::string, Channel *> tempCh = s->getChannel();
@@ -55,6 +58,24 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 			// std::cout << "ch name : [" << tempCh.begin()->second->getChannelName() <<"]" << std::endl;
 			std::map<std::string, Channel *>::iterator ChIt = tempCh.find(channels_name[i]);
 			// std::cout << "ch name : [" << ChIt->second->getChannelName() <<"]" << std::endl;
+
+
+			std::string nameReply = ":ircserv 353 ";
+			std::string eonReply = ":ircserv 366 ";
+			// nameReply += s->getClient(fd)->getNickName();
+			// nameReply += " ";
+			// eonReply += s->getClient(fd)->getNickName();
+			// eonReply += " ";
+			nameReply += "juahn = ";
+			eonReply += "juahn ";
+			nameReply += channels_name[i];
+			eonReply += channels_name[i];
+			nameReply += " :";
+			// nameReply +=
+
+			eonReply += " :End of NAMES list\r\n";
+
+
 			if (channels_passwd.size() > 0 && channels_passwd[i] != (*ChIt).second->getPassword())
 			{
 				// numeric reply 날리기 ERR_BADCHANNELKEY
@@ -64,34 +85,22 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 			std::cout << "JOIN check 1" << std::endl;
 				// 채널이 존재하는 플래그
 				// 이미 채널이 있는 상태
-				s->getChannel()[channels_name[i]]->addClient(fd, c);
-				c->addmyChannelList((*ChIt).second->getChannelName());
+				s->getChannel()[trim(channels_name[i], "#")]->addClient(fd, c);
+				c->addmyChannelList(trim(channels_name[i], "#"));
 				// 해당 클라이언트가 join했다고 채널에 메세지 날리기
 			}
 			else
 			{
 			std::cout << "JOIN check 2" << std::endl;
 				// 새로 채널 만들기
-				s->setChannel(channels_name[i], fd);
-				s->getChannel()[channels_name[i]]->addClient(fd, c);
-				c->addmyChannelList(channels_name[i]);
+				s->setChannel(trim(channels_name[i], "#"), fd);
+				s->getChannel()[trim(channels_name[i], "#")]->addClient(fd, c);
+				c->addmyChannelList(trim(channels_name[i], "#"));
 				// send(fd, prefix.c_str(), prefix.size(), 0);
 				// send(cFd, eonReply.c_str(), eonReply.size(), 0);
 				// 해당 클라이언트가 join했다고 채널에 메세지 날리기
 			}
 			tempCh = s->getChannel();
-			std::string nameReply = ":ircserv 353 = ";
-			std::string eonReply = ":ircserv 366 ";
-			// nameReply += s->getClient(fd)->getNickName();
-			// nameReply += " ";
-			// eonReply += s->getClient(fd)->getNickName();
-			// eonReply += " ";
-			nameReply += tempCh[channels_name[0]]->getChannelName();
-			eonReply += tempCh[channels_name[0]]->getChannelName();
-			nameReply += " :";
-			// nameReply +=
-
-			eonReply += " :End of NAMES list\r\n";
 
 			std::map<int, Client *> tempClient = tempCh[channels_name[0]]->getClientList();
 			// std::map<int, Client *> tempClient = s->getClients();
@@ -109,7 +118,9 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 					nameReply += " ";
 			}
 			nameReply += "\r\n";
-			std::cout << nameReply << std::endl;
+			std::cout << "[" << nameReply << "]" << std::endl;
+			std::cout << "[" << eonReply << "]" << std::endl;
+			std::cout << "[" << prefix << "]" << std::endl;
 			clientIter =tempClient.begin();
 			for (;clientIter != tempClient.end(); clientIter++)
 			{
@@ -118,12 +129,9 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 				std::cout << prefix << std::endl;
 				send(cFd, prefix.c_str(), prefix.size(), 0);
 				// 요청한 클라이언트에게만 reply
-				if (cFd == fd)
-				{
-					send(cFd, nameReply.c_str(), nameReply.size(), 0);
-					send(cFd, eonReply.c_str(), eonReply.size(), 0);
-				}
 			}
+			send(fd, nameReply.c_str(), nameReply.size(), 0);
+			send(fd, eonReply.c_str(), eonReply.size(), 0);
 		}
     }
 }
