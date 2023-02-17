@@ -21,6 +21,24 @@ void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 		{
 			if (cnt == 1)
 			{
+				if ((*it).find("#") != std::string::npos)
+				{
+					std::string tempStr = *it;
+					std::cout << "PRIV check" << std::endl;
+					std::map<int, Client *> tempCli = s->getChannel()[trim(tempStr, "#")]->getClientList();
+					std::map<int, Client *>::iterator clientIt = tempCli.begin();
+
+					std::cout << "PRIV check 2" << std::endl;
+					while (clientIt != tempCli.end())
+					{
+
+					std::cout << "PRIV check 3" << std::endl;
+						reciver.push_back(clientIt->second->getFD());
+						clientIt++;
+					}
+				}
+				else
+				{
 				std::map<int, Client *> temp_map = s->getClients();
 				std::map<int, Client *>::iterator mapIter = temp_map.begin();
 
@@ -34,6 +52,7 @@ void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 						reciver.push_back(mapIter->second->getFD());
 					}
 				}
+				}
 			}
 			temp += *it;
 			if (cnt != 2)
@@ -41,6 +60,7 @@ void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 			cnt++;
 		}
 		std::vector<int>::iterator vecIter = reciver.begin();
+		std::cout << "temp : "  << temp << std::endl;
 		for (; vecIter < reciver.end(); vecIter++)
 		{
 			std::cout << "vec iter : " << *vecIter << std::endl;
