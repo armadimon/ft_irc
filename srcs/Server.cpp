@@ -119,10 +119,39 @@ Client *Server::getClient(int client_fd)
 	return (this->clients[client_fd]);
 }
 
+Client *Server::getClient(std::string name)
+{
+	std::map<int, Client *>::iterator it = this->clients.begin();
+	for (; it != clients.end(); it++)
+	{
+		if (name == (*it).second->getNickName())
+			return (*it).second;
+	}
+	return nullptr;
+}
+
 std::string	Server::getPass()
 {
 	return(password);
 }
+
+std::map<int, Client *> Server::getClients()
+{
+	return (clients);
+}
+
+std::map<std::string, Channel *> Server::getChannel()
+{
+	return (channels);
+}
+
+
+void Server::setChannel(std::string chName, int fd)
+{
+
+	this->channels.insert(std::pair<std::string, Channel *>(chName, new Channel(chName, fd)));
+}
+
 
 /*
 METHOD :: SETTER
@@ -136,4 +165,16 @@ void Server::setPass(char *pw)
 void Server::setPort(char *port)
 {
 	this->port = atoi(port);
+}
+
+bool Server::isExistChannel(std::string channel_name)
+{
+	if (this->channels.find(channel_name) == this->channels.end())
+		return false;
+	return true;
+}
+
+Channel *Server::findChannel(std::string name)
+{
+	return this->channels.find(name)->second;
 }

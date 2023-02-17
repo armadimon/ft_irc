@@ -1,4 +1,4 @@
-#include "../../includes/Server.hpp"
+#include "../../includes/Command.hpp"
 
 void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 {
@@ -6,7 +6,9 @@ void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 	Client *c = s->getClient(fd);
 
 	std::string temp = ":";
+	std::vector<int> reciver;
 
+	int cnt = 0;
 	if (c->getUserState() == REGISTER)
 	{
 		temp += c->getNickName();
@@ -17,9 +19,52 @@ void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 		temp += " ";
 		for (; it < str.end(); it++)
 		{
+			if (cnt == 1)
+			{
+				if ((*it).find("#") != std::string::npos)
+				{
+					std::string tempStr = *it;
+					std::cout << "PRIV check" << std::endl;
+					std::map<int, Client *> tempCli = s->getChannel()[trim(tempStr, "#")]->getClientList();
+					std::map<int, Client *>::iterator clientIt = tempCli.begin();
+
+					std::cout << "PRIV check 2" << std::endl;
+					while (clientIt != tempCli.end())
+					{
+
+					std::cout << "PRIV check 3" << std::endl;
+						reciver.push_back(clientIt->second->getFD());
+						clientIt++;
+					}
+				}
+				else
+				{
+				std::map<int, Client *> temp_map = s->getClients();
+				std::map<int, Client *>::iterator mapIter = temp_map.begin();
+
+				for(; mapIter != temp_map.end(); mapIter++)
+				{
+					std::cout << "client : " << mapIter->second->getNickName() << std::endl;
+					std::cout << "it : " << *it << std::endl;
+					// std::cout << "priv msg : " << mapIter->second->getNickName() << std::endl;
+					if (mapIter->second->getNickName() == *it)
+					{
+						reciver.push_back(mapIter->second->getFD());
+					}
+				}
+				}
+			}
 			temp += *it;
-			temp += " ";
+			if (cnt != 2)
+				temp += " ";
+			cnt++;
 		}
-		send(c->getFD(), temp.c_str(), temp.size(), 0);
+		std::vector<int>::iterator vecIter = reciver.begin();
+		std::cout << "temp : "  << temp << std::endl;
+		for (; vecIter < reciver.end(); vecIter++)
+		{
+			std::cout << "vec iter : " << *vecIter << std::endl;
+			send(*vecIter, temp.c_str(), temp.size(), 0);
+		}
 	}
 }
