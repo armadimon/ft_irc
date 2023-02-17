@@ -1,0 +1,7 @@
+.DS_Store
+.vscode
+*.o
+bircd.tar
+bircd/
+temp.txt
+temp/
