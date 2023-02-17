@@ -40,6 +40,11 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 * JOIN 커맨드 임시 구현
 * Server, Channel, Client에 필요한 멤버 추가하기 
 
+### 2월 16일 (목)
+* 클라이언트 목록 업데이트
+* KICK 커맨드 임시 구현 (channel operator command)
+* trim Utility 함수 추가
+
 ### TODO
 
 * client 인증 시스템 보완 - 현재 state는
