@@ -45,6 +45,9 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 * KICK 커맨드 임시 구현 (channel operator command)
 * trim Utility 함수 추가
 
+### 2월 17일 (금)
+* JOIN 커맨드 
+
 ### TODO
 
 * client 인증 시스템 보완 - 현재 state는
