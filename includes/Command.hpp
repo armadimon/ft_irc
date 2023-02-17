@@ -24,5 +24,6 @@ void	cmdPass(Server *s, int fd, std::vector<std::string> str);
 void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str);
 void	cmdUser(Server *s, int fd, std::vector<std::string> str);
 void    cmdJoin(Client* c, std::vector<std::string> str);
+void	cmdKick(Server* s, int fd, std::vector<std::string> str);
 
 #endif
