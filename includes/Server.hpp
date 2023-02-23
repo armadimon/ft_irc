@@ -28,6 +28,7 @@ class Server
 	Client &getClient(int client_fd);
 	Client &getClient(std::string name);
 	std::map<int, Client *> getClients();
+	bool isNotUsed(std::string client_name);
 	std::map<std::string, Channel *> getChannel();
 	void setChannel(std::string chName, int fd);
 	void addChannel();
