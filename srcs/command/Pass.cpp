@@ -2,6 +2,7 @@
 
 void	cmdPass(Server *s, int fd, std::vector<std::string> str)
 {
+	// if (str.size() < 1) // ERR_NEEDMOREPARAMS 461
 	std::vector<std::string>::iterator it = str.begin();
 	Client &c = s->getClient(fd);
 
@@ -28,4 +29,6 @@ void	cmdPass(Server *s, int fd, std::vector<std::string> str)
 			cnt++;
 		}
 	}
+	if (c.getUserState() == REGISTER)
+		; // ERR_ALREADYREGISTRED 462 
 }
