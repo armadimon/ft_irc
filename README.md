@@ -4,7 +4,7 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 <br>
 
 ## 팀원
-🦔 juahn &emsp; 🧠 younjkim
+🦔 [juahn](https://github.com/armadimon) &emsp; 🧠 [younjkim](https://github.com/objectio)
 
 <br>
 
