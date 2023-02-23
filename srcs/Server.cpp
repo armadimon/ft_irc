@@ -148,11 +148,17 @@ std::map<int, Client *> Server::getClients()
 	return (clients);
 }
 
-std::map<std::string, Channel *> Server::getChannel()
+std::map<std::string, Channel *> &Server::getChannels()
 {
 	return (channels);
 }
 
+Channel *Server::getChannel(std::string chName)
+{
+	if (isExistChannel(chName))
+		return (channels[chName]);
+	return (nullptr);
+}
 
 void Server::setChannel(std::string chName, int fd)
 {

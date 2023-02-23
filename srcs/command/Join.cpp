@@ -1,5 +1,47 @@
 #include "../../includes/Command.hpp"
 
+static std::string makeNameReply(std::string nickName, std::string chName, std::string chMode)
+{
+	std::string str = "";
+
+	str += nickName;
+	str += " ";
+	str += chMode;
+	str += " ";
+	str += chName;
+	str += " ";
+	return (str);
+}
+
+static std::string attachClientList(std::map<std::string, Channel *> tempCh, std::string chName, std::string nameReply)
+{
+	std::map<int, std::string> tempClient = tempCh[chName]->getClientList();
+	std::map<int, std::string>::iterator clientIter = tempClient.begin();
+	for (;clientIter != tempClient.end();)
+	{
+		std::string cname = clientIter->second;
+		if (tempCh[chName]->getOperatorFD() == clientIter->first)
+			nameReply += "@";
+		nameReply += cname;
+		clientIter++;
+		if (clientIter != tempClient.end())
+			nameReply += " ";
+	}
+	nameReply += "\r\n";
+	return (nameReply);
+}
+
+static std::string makeEonReply(std::string nickName, std::string chName)
+{
+	std::string str = "";
+
+	str += nickName;
+	str += " ";
+	str += chName;
+	str += " ";
+	return (str);
+}
+
 void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 {
 	// if (str.size() < 1) 461 ERR_NEEDMOREPARAMS
@@ -56,76 +98,33 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 		for (size_t i = 0; i < channels_name.size(); i++)
 		{
 			
-			std::cout << "[" << channels_name[i] << "]" << std::endl;
 			// 서버에 채널이 생성되어 있는지 확인
-			std::map<std::string, Channel *> tempCh = s->getChannel();
-			std::cout << "size : " << tempCh.size() << std::endl;
-			// std::cout << "ch name : [" << tempCh.begin()->second->getChannelName() <<"]" << std::endl;
+			std::map<std::string, Channel *> &tempCh = s->getChannels();
 			std::map<std::string, Channel *>::iterator ChIt = tempCh.find(channels_name[i]);
-			// std::cout << "ch name : [" << ChIt->second->getChannelName() <<"]" << std::endl;
 
+			// make reply for each channel
+			std::string nameReply = makeNameReply(c.getNickName(), channels_name[i], "=");
+			std::string eonReply = makeEonReply(c.getNickName(), channels_name[i]);
 
-			std::string nameReply = "";
-			std::string eonReply = "";
-			nameReply += "juahn = ";
-			eonReply += "juahn ";
-			nameReply += channels_name[i];
-			eonReply += channels_name[i];
-			nameReply += " :";
-
-			if (c.getmyChannelList().size() >= 10)
-				// numeric reply ERR_TOOMANYCHANNELS 405
 			if (channels_passwd.size() > 0 && channels_passwd[i] != (*ChIt).second->getPassword())
 			{
 				// numeric reply 날리기 ERR_BADCHANNELKEY 475
 			}
 			if (ChIt != tempCh.end())
 			{
-			std::cout << "JOIN check 1" << std::endl;
-				// 채널이 존재하는 플래그
-				// 이미 채널이 있는 상태
-				s->getChannel()[trim(channels_name[i], "#")]->addClient(fd, c.getNickName());
-				c.addmyChannelList(trim(channels_name[i], "#"));
-				// 해당 클라이언트가 join했다고 채널에 메세지 날리기
+				s->getChannels()[channels_name[i]]->addClient(fd, c.getNickName());
+				c.addmyChannelList(channels_name[i]);
 			}
 			else
 			{
-			std::cout << "JOIN check 2" << std::endl;
 				// 새로 채널 만들기
-				s->setChannel(trim(channels_name[i], "#"), fd);
-				s->getChannel()[trim(channels_name[i], "#")]->addClient(fd, c.getNickName());
-				c.addmyChannelList(trim(channels_name[i], "#"));
-				// send(fd, prefix.c_str(), prefix.size(), 0);
-				// send(cFd, eonReply.c_str(), eonReply.size(), 0);
+				s->setChannel(channels_name[i], fd);
+				s->getChannels()[channels_name[i]]->addClient(fd, c.getNickName());
+				c.addmyChannelList(channels_name[i]);
 				// 해당 클라이언트가 join했다고 채널에 메세지 날리기
 			}
-			tempCh = s->getChannel();
-
-			std::map<int, std::string> tempClient = tempCh[channels_name[0]]->getClientList();
-			// std::map<int, Client *> tempClient = s->getClients();
-			std::cout << "cli size : " << tempClient.size() << std::endl;
-			// 수정필요. 
-			std::map<int, std::string>::iterator clientIter = tempClient.begin();
-			for (;clientIter != tempClient.end();)
-			{
-				std::string cname = clientIter->second;
-				if (s->getChannel()[channels_name[0]]->getOperatorFD() == clientIter->first)
-					nameReply += "@";
-				nameReply += cname;
-				clientIter++;
-				if (clientIter != tempClient.end())
-					nameReply += " ";
-			}
-			nameReply += "\r\n";
-			clientIter =tempClient.begin();
-			for (;clientIter != tempClient.end(); clientIter++)
-			{
-				int	cFd = clientIter->first;
-				// nickname, username, hostname;
-				std::cout << prefix << std::endl;
-				send(cFd, prefix.c_str(), prefix.size(), 0);
-				// 요청한 클라이언트에게만 reply
-			}
+			broadcast(tempCh, channels_name[i], prefix);
+			nameReply = attachClientList(tempCh, channels_name[i], nameReply);
 			reply(fd, 353, nameReply);
 			reply(fd, 366, eonReply);
 		}
