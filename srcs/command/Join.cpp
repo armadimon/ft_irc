@@ -1,5 +1,27 @@
 #include "../../includes/Command.hpp"
 
+static std::string makeNameReply(std::string nickName, std::string chName, std::string chMode)
+{
+	std::string str = "";
+
+	str += nickName;
+	str += " ";
+	str += chName;
+	str += " ";
+	return (str);
+}
+
+static std::string makeEonReply(std::string nickName, std::string chName)
+{
+	std::string str = "";
+
+	str += nickName;
+	str += " ";
+	str += chName;
+	str += " ";
+	return (str);
+}
+
 void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 {
     std::vector<std::string>::iterator it = str.begin();
@@ -58,14 +80,9 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 			std::map<std::string, Channel *>::iterator ChIt = tempCh.find(channels_name[i]);
 			// std::cout << "ch name : [" << ChIt->second->getChannelName() <<"]" << std::endl;
 
-
-			std::string nameReply = "";
-			std::string eonReply = "";
-			nameReply += "juahn = ";
-			eonReply += "juahn ";
-			nameReply += channels_name[i];
-			eonReply += channels_name[i];
-			nameReply += " :";
+			// make reply for each channel
+			std::string nameReply = makeNameReply(c.getNickName(), channels_name[i]);
+			std::string eonReply = makeEonReply(c.getNickName(), channels_name[i]);
 
 
 			if (channels_passwd.size() > 0 && channels_passwd[i] != (*ChIt).second->getPassword())
@@ -74,22 +91,16 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 			}
 			if (ChIt != tempCh.end())
 			{
-			std::cout << "JOIN check 1" << std::endl;
-				// 채널이 존재하는 플래그
-				// 이미 채널이 있는 상태
-				s->getChannel()[trim(channels_name[i], "#")]->addClient(fd, c.getNickName());
-				c.addmyChannelList(trim(channels_name[i], "#"));
+				s->getChannel()[channels_name[i]]->addClient(fd, c.getNickName());
+				c.addmyChannelList(channels_name[i]);
 				// 해당 클라이언트가 join했다고 채널에 메세지 날리기
 			}
 			else
 			{
-			std::cout << "JOIN check 2" << std::endl;
 				// 새로 채널 만들기
-				s->setChannel(trim(channels_name[i], "#"), fd);
-				s->getChannel()[trim(channels_name[i], "#")]->addClient(fd, c.getNickName());
-				c.addmyChannelList(trim(channels_name[i], "#"));
-				// send(fd, prefix.c_str(), prefix.size(), 0);
-				// send(cFd, eonReply.c_str(), eonReply.size(), 0);
+				s->setChannel(channels_name[i], fd);
+				s->getChannel()[channels_name[i]]->addClient(fd, c.getNickName());
+				c.addmyChannelList(channels_name[i]);
 				// 해당 클라이언트가 join했다고 채널에 메세지 날리기
 			}
 			tempCh = s->getChannel();
