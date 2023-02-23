@@ -59,15 +59,13 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 			// std::cout << "ch name : [" << ChIt->second->getChannelName() <<"]" << std::endl;
 
 
-			std::string nameReply = ":ircserv 353 ";
-			std::string eonReply = ":ircserv 366 ";
+			std::string nameReply = "";
+			std::string eonReply = "";
 			nameReply += "juahn = ";
 			eonReply += "juahn ";
 			nameReply += channels_name[i];
 			eonReply += channels_name[i];
 			nameReply += " :";
-
-			eonReply += " :End of NAMES list\r\n";
 
 
 			if (channels_passwd.size() > 0 && channels_passwd[i] != (*ChIt).second->getPassword())
@@ -121,8 +119,8 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 				send(cFd, prefix.c_str(), prefix.size(), 0);
 				// 요청한 클라이언트에게만 reply
 			}
-			send(fd, nameReply.c_str(), nameReply.size(), 0);
-			send(fd, eonReply.c_str(), eonReply.size(), 0);
+			reply(fd, 353, nameReply);
+			reply(fd, 366, eonReply);
 		}
     }
 }

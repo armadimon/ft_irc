@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <sstream>
 #include <netdb.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -19,6 +20,6 @@ std::string &rtrim(std::string &s, std::string delimiter);
 
 const std::string &trim(std::string &s, std::string delimiter);
 
-
+void	reply(int fd, int replyNum, std::string msg);
 
 #endif
