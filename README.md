@@ -75,5 +75,6 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 * NOTICE 구현
 * KICK 구현
 * reply 구현
+* operator privileged command 구현
 * 리팩토링
 * 강제종료 후 leak 검사
