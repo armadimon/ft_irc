@@ -72,3 +72,8 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
    4개로 구성되어있고, 커맨드 구현하면서 state에 대한 구분을 더 세부적으로 해야할 수도있음.
 
 * 프라이빗 메시지, JOIN 완성, 채널 기능 완성
+* NOTICE 구현
+* KICK 구현
+* reply 구현
+* 리팩토링
+* 강제종료 후 leak 검사
