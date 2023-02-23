@@ -3,11 +3,11 @@
 void	cmdPass(Server *s, int fd, std::vector<std::string> str)
 {
 	std::vector<std::string>::iterator it = str.begin();
-	Client *c = s->getClient(fd);
+	Client &c = s->getClient(fd);
 
 	int cnt = 0;
 
-	if (c->getUserState() == DEFAULT)
+	if (c.getUserState() == DEFAULT)
 	{
 		for (; it < str.end(); it++)
 		{
@@ -19,8 +19,8 @@ void	cmdPass(Server *s, int fd, std::vector<std::string> str)
 				std::cout << "input_pass : [" << it->substr(0, endPos + 1) << std::endl;
 
 				if (s->getPass() == it->substr(0, endPos +1))
-					c->setUserState();
-				std::cout << "State : " << c->getUserState() << std::endl;
+					c.setUserState();
+				std::cout << "State : " << c.getUserState() << std::endl;
 				// std::string temp;
 				// temp = 
 				// if (s->getPass() == *it)

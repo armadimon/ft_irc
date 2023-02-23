@@ -3,12 +3,12 @@
 void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 {
     std::vector<std::string>::iterator it = str.begin();
-    Client* c = s->getClient(fd);
+    Client &c = s->getClient(fd);
     int cnt = 0;
 	std::vector<std::string> channels_name;
 	std::vector<std::string> channels_passwd;
 
-    if (c->getUserState() == REGISTER)
+    if (c.getUserState() == REGISTER)
     {
         for (; it < str.end(); it++)
         {
@@ -22,12 +22,11 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 
 		// 요청한 클라이언트의 정보를 가져와서 prefix 조합
 		std::string	prefix = ":";
-		prefix += c->getNickName();
+		prefix += c.getNickName();
 		prefix += "!";
-		prefix += c->getUserName();
+		prefix += c.getUserName();
 		prefix += "@";
-		// prefix += c->getHostName();
-		prefix += "*";
+		prefix += c.getHostName();
 		prefix += " ";
 
 		// 조합한 prefix와 받은 msg 전체를 재조립
@@ -62,16 +61,11 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 
 			std::string nameReply = ":ircserv 353 ";
 			std::string eonReply = ":ircserv 366 ";
-			// nameReply += s->getClient(fd)->getNickName();
-			// nameReply += " ";
-			// eonReply += s->getClient(fd)->getNickName();
-			// eonReply += " ";
 			nameReply += "juahn = ";
 			eonReply += "juahn ";
 			nameReply += channels_name[i];
 			eonReply += channels_name[i];
 			nameReply += " :";
-			// nameReply +=
 
 			eonReply += " :End of NAMES list\r\n";
 
@@ -85,8 +79,8 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 			std::cout << "JOIN check 1" << std::endl;
 				// 채널이 존재하는 플래그
 				// 이미 채널이 있는 상태
-				s->getChannel()[trim(channels_name[i], "#")]->addClient(fd, c);
-				c->addmyChannelList(trim(channels_name[i], "#"));
+				s->getChannel()[trim(channels_name[i], "#")]->addClient(fd, c.getNickName());
+				c.addmyChannelList(trim(channels_name[i], "#"));
 				// 해당 클라이언트가 join했다고 채널에 메세지 날리기
 			}
 			else
@@ -94,23 +88,23 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 			std::cout << "JOIN check 2" << std::endl;
 				// 새로 채널 만들기
 				s->setChannel(trim(channels_name[i], "#"), fd);
-				s->getChannel()[trim(channels_name[i], "#")]->addClient(fd, c);
-				c->addmyChannelList(trim(channels_name[i], "#"));
+				s->getChannel()[trim(channels_name[i], "#")]->addClient(fd, c.getNickName());
+				c.addmyChannelList(trim(channels_name[i], "#"));
 				// send(fd, prefix.c_str(), prefix.size(), 0);
 				// send(cFd, eonReply.c_str(), eonReply.size(), 0);
 				// 해당 클라이언트가 join했다고 채널에 메세지 날리기
 			}
 			tempCh = s->getChannel();
 
-			std::map<int, Client *> tempClient = tempCh[channels_name[0]]->getClientList();
+			std::map<int, std::string> tempClient = tempCh[channels_name[0]]->getClientList();
 			// std::map<int, Client *> tempClient = s->getClients();
 			std::cout << "cli size : " << tempClient.size() << std::endl;
 			// 수정필요. 
-			std::map<int, Client *>::iterator clientIter = tempClient.begin();
+			std::map<int, std::string>::iterator clientIter = tempClient.begin();
 			for (;clientIter != tempClient.end();)
 			{
-				std::string cname = clientIter->second->getNickName();
-				if (s->getChannel()[channels_name[0]]->getOperatorFD() == clientIter->second->getFD())
+				std::string cname = clientIter->second;
+				if (s->getChannel()[channels_name[0]]->getOperatorFD() == clientIter->first)
 					nameReply += "@";
 				nameReply += cname;
 				clientIter++;
@@ -118,13 +112,10 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 					nameReply += " ";
 			}
 			nameReply += "\r\n";
-			std::cout << "[" << nameReply << "]" << std::endl;
-			std::cout << "[" << eonReply << "]" << std::endl;
-			std::cout << "[" << prefix << "]" << std::endl;
 			clientIter =tempClient.begin();
 			for (;clientIter != tempClient.end(); clientIter++)
 			{
-				int	cFd = clientIter->second->getFD();
+				int	cFd = clientIter->first;
 				// nickname, username, hostname;
 				std::cout << prefix << std::endl;
 				send(cFd, prefix.c_str(), prefix.size(), 0);

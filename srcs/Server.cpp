@@ -62,7 +62,7 @@ void Server::doSelect() {
 void Server::clientRead(int client_fd)
 {
 	int	r;
-	char* bufRead = this->getClient(client_fd)->getBuf();
+	char* bufRead = this->getClient(client_fd).getBuf();
 
   	r = recv(client_fd, bufRead, 1024, 0);
 	std::cout << bufRead << std::endl;
@@ -114,20 +114,20 @@ void Server::run()
 METHOD :: GETTER
 */
 
-Client *Server::getClient(int client_fd)
+Client &Server::getClient(int client_fd)
 {
-	return (this->clients[client_fd]);
+	return (*(this->clients[client_fd]));
 }
 
-Client *Server::getClient(std::string name)
+Client &Server::getClient(std::string name)
 {
 	std::map<int, Client *>::iterator it = this->clients.begin();
 	for (; it != clients.end(); it++)
 	{
-		if (name == (*it).second->getNickName())
-			return (*it).second;
+		if (name == it->second->getNickName())
+			return *(it->second);
 	}
-	return nullptr;
+	throw std::runtime_error("Error :");
 }
 
 std::string	Server::getPass()
@@ -174,7 +174,7 @@ bool Server::isExistChannel(std::string channel_name)
 	return true;
 }
 
-Channel *Server::findChannel(std::string name)
-{
-	return this->channels.find(name)->second;
-}
+// Channel *Server::findChannel(std::string name)
+// {
+// 	return this->channels.find(name)->second;
+// }

@@ -19,4 +19,6 @@ std::string &rtrim(std::string &s, std::string delimiter);
 
 const std::string &trim(std::string &s, std::string delimiter);
 
+
+
 #endif
