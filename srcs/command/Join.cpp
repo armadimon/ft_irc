@@ -2,6 +2,7 @@
 
 void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 {
+	// if (str.size() < 1) 461 ERR_NEEDMOREPARAMS
     std::vector<std::string>::iterator it = str.begin();
     Client &c = s->getClient(fd);
     int cnt = 0;
@@ -19,6 +20,11 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 				channels_passwd = string_split(*it, ",");
 			cnt++;
         }
+
+		// for (int i = 0; i < channels_name.size(); i++)
+		// 	if (channels_name[i].size() > 200 || channels_name[i].find(" ") < 0 || 
+		// 		channels_name[i].find(",") < 0 || channels_name[i].find("^G") < 0) 
+		// 		// ERR_BADCHANMASK 476
 
 		// 요청한 클라이언트의 정보를 가져와서 prefix 조합
 		std::string	prefix = ":";
@@ -67,10 +73,11 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 			eonReply += channels_name[i];
 			nameReply += " :";
 
-
+			if (c.getmyChannelList().size() >= 10)
+				// numeric reply ERR_TOOMANYCHANNELS 405
 			if (channels_passwd.size() > 0 && channels_passwd[i] != (*ChIt).second->getPassword())
 			{
-				// numeric reply 날리기 ERR_BADCHANNELKEY
+				// numeric reply 날리기 ERR_BADCHANNELKEY 475
 			}
 			if (ChIt != tempCh.end())
 			{
