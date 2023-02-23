@@ -25,7 +25,7 @@ void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 				{
 					std::string tempStr = *it;
 					std::cout << "PRIV check" << std::endl;
-					std::map<int, std::string> tempCli = s->getChannel()[trim(tempStr, "#")]->getClientList();
+					std::map<int, std::string> tempCli = s->getChannels()[tempStr]->getClientList();
 					std::map<int, std::string>::iterator clientIt = tempCli.begin();
 
 					std::cout << "PRIV check 2" << std::endl;
@@ -56,7 +56,7 @@ void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 				}
 			}
 			temp += *it;
-			if (cnt != 2)
+			if (it + 1 != str.end())
 				temp += " ";
 			cnt++;
 		}
