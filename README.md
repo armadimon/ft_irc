@@ -3,6 +3,11 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 
 <br>
 
+## 팀원
+🦔 juahn &emsp; 🧠 younjkim
+
+<br>
+
 ## 구현 기간
 2023/02/09 ~
 
@@ -47,6 +52,13 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 
 ### 2월 17일 (금)
 * JOIN 커맨드 
+
+### 2월 18일 (토) ~ 2월 22일 (수)
+* younjkim의 일본여행으로 인해 쉬어감 😶‍🌫️
+
+### 2월 23일 (목)
+* numeric reply
+* Channel Class 일부 리팩토링
 
 ### TODO
 
