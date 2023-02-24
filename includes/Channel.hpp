@@ -17,10 +17,12 @@ class Channel
   public:
 	Channel();
 	Channel(std::string n, int user_fd);
+	Channel(std::string n, std::string key, int user_fd);
 	~Channel();
 	int getOperatorFD();
 	std::string getChannelName();
 	std::string getPassword();
+	void		setPassword();
 	std::map<int, std::string> getClientList();
 	void addClient(int fd, std::string clientName);
 	void removeClient(int fd);

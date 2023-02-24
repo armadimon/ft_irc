@@ -109,14 +109,14 @@ void Server::run()
 	}
 }
 
-bool Server::isNotUsed(std::string client_name)
-{
-	std::map<int, Client *>::iterator it = this->clients.begin();
-	for (; it != this->clients.end(); it++)
-		if ((*it).second->getNickName() == client_name)
-			return false;
-	return true;
-}
+// bool Server::isNotUsed(std::string client_name)
+// {
+// 	std::map<int, Client *>::iterator it = this->clients.begin();
+// 	for (; it != this->clients.end(); it++)
+// 		if ((*it).second->getNickName() == client_name)
+// 			return false;
+// 	return true;
+// }
 
 /*
 METHOD :: GETTER
@@ -166,8 +166,13 @@ void Server::setChannel(std::string chName, int fd)
 	this->channels.insert(std::pair<std::string, Channel *>(chName, new Channel(chName, fd)));
 }
 
+void Server::setChannel(std::string chName, std::string key,int fd)
+{
 
-/*
+	this->channels.insert(std::pair<std::string, Channel *>(chName, new Channel(chName, key, fd)));
+}
+
+/*ccccw
 METHOD :: SETTER
 */
 

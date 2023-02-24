@@ -31,6 +31,7 @@ class Server
 	std::map<std::string, Channel *> &getChannels();
 	Channel *getChannel(std::string chName);
 	void setChannel(std::string chName, int fd);
+	void setChannel(std::string chName, std::string key,int fd);
 	void addChannel();
 	void setClient(std::map<int, Client> c);
 	void clientRead(int client_fd);
