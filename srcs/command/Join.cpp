@@ -17,6 +17,7 @@ static std::string attachClientList(std::map<std::string, Channel *> tempCh, std
 {
 	std::map<int, std::string> tempClient = tempCh[chName]->getClientList();
 	std::map<int, std::string>::iterator clientIter = tempClient.begin();
+	nameReply += ":";
 	for (;clientIter != tempClient.end();)
 	{
 		std::string cname = clientIter->second;
@@ -77,27 +78,26 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 		prefix += c.getHostName();
 		prefix += " ";
 
-		// 조합한 prefix와 받은 msg 전체를 재조립
-		std::vector<std::string>::iterator msgIter = str.begin();
-		while (msgIter < str.end())
-		{
-			if ((*msgIter).find("#") != std::string::npos)
-				prefix += ":";
-			prefix += *msgIter;
-			msgIter++;
-			if (msgIter != str.end())
-				prefix += " ";
-		}
-
 		std::vector<std::string>::iterator nameIter = channels_name.end() - 1;
 
 		size_t endPos = nameIter->find_last_not_of("\n\r");
 		if (endPos != std::string::npos)
 			*nameIter = nameIter->substr(0, endPos +1);
+		
 		std::cout << channels_name.size() << std::endl;
+
+		std::vector<std::string>::iterator keyIter = channels_passwd.begin();
+		if (keyIter < channels_passwd.end())
+		{
+			endPos = keyIter->find_last_not_of("\n\r");
+			if (endPos != std::string::npos)
+				*keyIter = keyIter->substr(0, endPos +1);
+		}
+		keyIter = channels_passwd.begin();
+
 		for (size_t i = 0; i < channels_name.size(); i++)
 		{
-			
+			std::string key = keyIter < channels_passwd.end() ? *keyIter++ : "";
 			// 서버에 채널이 생성되어 있는지 확인
 			std::map<std::string, Channel *> &tempCh = s->getChannels();
 			std::map<std::string, Channel *>::iterator ChIt = tempCh.find(channels_name[i]);
@@ -106,27 +106,39 @@ void cmdJoin(Server* s, int fd, std::vector<std::string> str)
 			std::string nameReply = makeNameReply(c.getNickName(), channels_name[i], "=");
 			std::string eonReply = makeEonReply(c.getNickName(), channels_name[i]);
 
-			if (channels_passwd.size() > 0 && channels_passwd[i] != (*ChIt).second->getPassword())
-			{
-				// numeric reply 날리기 ERR_BADCHANNELKEY 475
-			}
 			if (ChIt != tempCh.end())
 			{
+				if (s->getChannel(channels_name[i])->getPassword() != key)
+				{
+					reply(fd, 475, channels_name[i]);
+					continue;
+				}
 				s->getChannels()[channels_name[i]]->addClient(fd, c.getNickName());
 				c.addmyChannelList(channels_name[i]);
 			}
 			else
 			{
 				// 새로 채널 만들기
-				s->setChannel(channels_name[i], fd);
+				if (key != "")
+					s->setChannel(channels_name[i], channels_passwd[i], fd);
+				else
+					s->setChannel(channels_name[i], fd);
 				s->getChannels()[channels_name[i]]->addClient(fd, c.getNickName());
 				c.addmyChannelList(channels_name[i]);
 				// 해당 클라이언트가 join했다고 채널에 메세지 날리기
 			}
-			broadcast(tempCh, channels_name[i], prefix);
+			std::string msg = "";
+			msg += prefix;
+			msg += "JOIN :";
+			msg += channels_name[i];
+			msg += "\r\n";;
+			std::cout << "msg : [" << msg <<  "]" << std::endl;
+			broadcast(tempCh, channels_name[i], msg);
 			nameReply = attachClientList(tempCh, channels_name[i], nameReply);
 			reply(fd, 353, nameReply);
 			reply(fd, 366, eonReply);
+			if (keyIter < channels_passwd.end())
+				keyIter++;
 		}
     }
 }

@@ -25,6 +25,10 @@ void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 				{
 					std::string tempStr = *it;
 					std::cout << "PRIV check" << std::endl;
+					// 
+					std::map<std::string, Channel *> tempCh = s->getChannels();
+					if (tempCh.size()  == 0)
+						return ;
 					std::map<int, std::string> tempCli = s->getChannels()[tempStr]->getClientList();
 					std::map<int, std::string>::iterator clientIt = tempCli.begin();
 
