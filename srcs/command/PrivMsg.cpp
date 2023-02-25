@@ -1,14 +1,15 @@
 #include "../../includes/Command.hpp"
 
-void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
+void	cmdPrivMsg(Command cmd, int fd)
 {
-	std::vector<std::string>::iterator it = str.begin();
-	Client &c = s->getClient(fd);
+	std::vector<std::string> params = cmd.getParams();
+	Client &c = cmd.getServer().getClient(fd);
+	Server &s = cmd.getServer();
 
 	std::string temp = ":";
-	std::vector<int> reciver;
-
-	int cnt = 0;
+	std::vector<int> reciverFD;
+	std::vector<std::string> recivers;
+	
 	if (c.getUserState() == REGISTER)
 	{
 		temp += c.getNickName();
@@ -17,58 +18,60 @@ void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 		temp += "@";
 		temp += c.getHostName();
 		temp += " ";
-		for (; it < str.end(); it++)
+
+		recivers = string_split(params[0], ",");
+		std::vector<std::string>::iterator rIter = recivers.begin();
+		for (;rIter < recivers.end(); rIter++)
 		{
-			if (cnt == 1)
+			if ((*rIter)[0] == '#')
 			{
-				if ((*it).find("#") != std::string::npos)
+				std::string tempStr = *rIter;
+				std::cout << "PRIV check" << std::endl;
+				// 
+				std::map<std::string, Channel *> tempCh = s.getChannels();
+				if (tempCh.size()  == 0)
+					return ;
+				std::map<int, std::string> tempCli = s.getChannels()[tempStr]->getClientList();
+				std::map<int, std::string>::iterator clientIt = tempCli.begin();
+
+				std::cout << "PRIV check 2" << std::endl;
+				while (clientIt != tempCli.end())
 				{
-					std::string tempStr = *it;
-					std::cout << "PRIV check" << std::endl;
-					// 
-					std::map<std::string, Channel *> tempCh = s->getChannels();
-					if (tempCh.size()  == 0)
-						return ;
-					std::map<int, std::string> tempCli = s->getChannels()[tempStr]->getClientList();
-					std::map<int, std::string>::iterator clientIt = tempCli.begin();
 
-					std::cout << "PRIV check 2" << std::endl;
-					while (clientIt != tempCli.end())
-					{
-
-					std::cout << "PRIV check 3" << std::endl;
-						if (clientIt->first != c.getFD())
-							reciver.push_back(clientIt->first);
-						clientIt++;
-					}
+				std::cout << "PRIV check 3" << std::endl;
+					if (clientIt->first != c.getFD())
+						reciverFD.push_back(clientIt->first);
+					clientIt++;
 				}
-				else
-				{
-				std::map<int, Client *> temp_map = s->getClients();
+			}
+			else
+			{
+				std::map<int, Client *> temp_map = s.getClients();
 				std::map<int, Client *>::iterator mapIter = temp_map.begin();
 
 				for(; mapIter != temp_map.end(); mapIter++)
 				{
 					std::cout << "client : " << mapIter->second->getNickName() << std::endl;
-					std::cout << "it : " << *it << std::endl;
+					std::cout << "it : " << *rIter << std::endl;
 					// std::cout << "priv msg : " << mapIter->second->getNickName() << std::endl;
-					if (mapIter->second->getNickName() == *it)
+					if (mapIter->second->getNickName() == *rIter)
 					{
-						reciver.push_back(mapIter->second->getFD());
+						reciverFD.push_back(mapIter->second->getFD());
 					}
 				}
-				}
 			}
-			temp += *it;
-			if (it + 1 != str.end())
-				temp += " ";
-			cnt++;
 		}
-		std::vector<int>::iterator vecIter = reciver.begin();
-		std::cout << "temp : "  << temp << std::endl;
-		for (; vecIter < reciver.end(); vecIter++)
+		std::vector<int>::iterator vecIter = reciverFD.begin();
+		for (; vecIter < reciverFD.end(); vecIter++)
 		{
 			std::cout << "vec iter : " << *vecIter << std::endl;
+			temp += cmd.getCmd() + " " + params[0] + " ";
+			if (params.size() > 1)
+				temp += params[1];
+			else
+				temp += cmd.getTrailing();
+			temp += "\r\n";
+			std::cout << "temp : "  << temp << std::endl;
 			send(*vecIter, temp.c_str(), temp.size(), 0);
 		}
 	}
