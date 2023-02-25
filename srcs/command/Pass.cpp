@@ -2,7 +2,13 @@
 
 void	cmdPass(Command cmd, int fd)
 {
-	// if (str.size() < 1) // ERR_NEEDMOREPARAMS 461
+	std::vector<std::string> params = cmd.getParams();
+	if (params.size() < 1)
+	{
+		// ERR_NEEDMOREPARAMS 461
+		reply(fd, 461, cmd.getCmd());
+		return;
+	}
 	Client &c = cmd.getServer().getClient(fd);
 
 	std::vector<std::string>::iterator it = cmd.getParams().begin();
@@ -19,6 +25,10 @@ void	cmdPass(Command cmd, int fd)
 				std::cout << "State : " << c.getUserState() << std::endl;
 		}
 	}
-	if (c.getUserState() == REGISTER)
-		; // ERR_ALREADYREGISTRED 462 
+	else if (c.getUserState() == REGISTER)
+	{
+		// ERR_ALREADYREGISTRED 462 
+		reply(fd, 462, NULL);
+		return;
+	}
 }
