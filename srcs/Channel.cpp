@@ -44,18 +44,15 @@ void Channel::removeClient(std::string name)
 {
 	std::cout << this->client_list.size() << std::endl;
 	std::map<int, std::string>::iterator it = this->client_list.begin();
-	std::cout << "remove Client" << std::endl;
 	for (; it != this->client_list.end(); it++)
 	{
 		if (name == (*it).second)
 		{
-			std::cout << "before erase" << std::endl;
 			std::cout << this->client_list.size() << std::endl;
 			this->client_list.erase(it);
 			it--;
 		}
 	}
-	std::cout << "remove Client" << std::endl;
 }
 
 bool Channel::isExistClient(std::string name)
