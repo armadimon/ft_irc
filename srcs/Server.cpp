@@ -108,14 +108,14 @@ void Server::run()
 	}
 }
 
-// bool Server::isNotUsed(std::string client_name)
-// {
-// 	std::map<int, Client *>::iterator it = this->clients.begin();
-// 	for (; it != this->clients.end(); it++)
-// 		if ((*it).second->getNickName() == client_name)
-// 			return false;
-// 	return true;
-// }
+bool Server::isAlreadyUsed(std::string client_name)
+{
+	std::map<int, Client *>::iterator it = this->clients.begin();
+	for (; it != this->clients.end(); it++)
+		if ((*it).second->getNickName() == client_name)
+			return true;
+	return false;
+}
 
 /*
 METHOD :: GETTER
