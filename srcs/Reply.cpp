@@ -32,6 +32,9 @@ void	reply(int fd, int replyNum, std::string msg)
 	case 461:
 		ss << ":Not enough parameters\r\n";
 		break;
+	case 462:
+		ss << ":You may not reregister\r\n";
+		break;
 	case 475:
 		ss << ":Cannot join channel (+k)\r\n";
 		break;
