@@ -2,10 +2,15 @@
 
 void	cmdUser(Command cmd, int fd)
 {
-	// if (str.size() < 4) // ERR_NEEDMOREPARAMS 461
 	std::vector<std::string> params = cmd.getParams();
+	if (params.size() < 4)
+	{
+		// ERR_NEEDMOREPARAMS
+		reply(fd, 461, cmd.getCmd());
+		return;
+	}
+	
 	Client &c = cmd.getServer().getClient(fd);
-
 	// ERR_ALREADYREGISTRED 462 = username, hostname, realname 전부 저장되있을 때
 	if (c.getUserState() == REGISTER)
 	{

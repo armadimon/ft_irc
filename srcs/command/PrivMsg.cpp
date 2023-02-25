@@ -3,6 +3,17 @@
 void	cmdPrivMsg(Command cmd, int fd)
 {
 	std::vector<std::string> params = cmd.getParams();
+	if (params[0].empty())
+	{
+		reply(fd, 411, NULL); // ERR_NORECIPIENT
+		return;
+	}
+	if (params[1].empty())
+	{
+		reply(fd, 412, NULL); // ERR_NOTEXTTOSEND
+		return;
+	}
+
 	Client &c = cmd.getServer().getClient(fd);
 	Server &s = cmd.getServer();
 
