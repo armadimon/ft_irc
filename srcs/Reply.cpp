@@ -17,6 +17,12 @@ void	reply(int fd, int replyNum, std::string msg)
 	case 403:
 		ss << ":No such channel\r\n";
 		break;
+	case 411:
+		ss << ":No recipient given (PRIVMSG)\r\n";
+		break;
+	case 412:
+		ss << ":No text to send\r\n";
+		break;
 	case 431:
 		ss << ":No nickname given\r\n";
 		break;
