@@ -3,7 +3,11 @@
 // KICK <channel> <user> [<comment>]
 void	cmdKick(Server* s, int fd, std::vector<std::string> str)
 {
-	// if (str.size() < 3) ERR_NEEDMOREPARAMS
+	if (str.size() < 3)
+	{
+		reply(fd, 461, str[0]);
+		return;
+	}
 	std::vector<std::string>::iterator it = str.begin(); // KICK
 	Client &c = s->getClient(fd);
 	int cnt = 0;
@@ -21,37 +25,36 @@ void	cmdKick(Server* s, int fd, std::vector<std::string> str)
 				// 채널이 존재하는지 검사
 				if (!s->isExistChannel(channel_name))
 				{
-					std::cout << cnt << std::endl;
 					// ERR_NOSUCHCHANNEL
+					reply(fd, 403, channel_name);
+					return;
 				}
 			}
 			else if (cnt == 2)
-			{
-				std::cout << cnt << std::endl;
 				user_names = string_split(*it, ",");
-			}
 			else if (cnt == 3)
-			{
-				std::cout << cnt << std::endl;
 				comment = *it;
-			}
 			cnt++;
 		}
+		Channel* chan = s->getChannel(channel_name);
 		// 요청한 클라이언트가 실제 채널 operator인지 확인
-		// if (fd != s->findChannel(channel_name)->getOperatorFD())
-		// {
-		// 	// ERR_CHANOPRIVSNEEDED
-		// 	exit(1);
-		// }
+		if (fd != chan->getOperatorFD())
+		{
+			// ERR_CHANOPRIVSNEEDED
+			reply(fd, 482, channel_name);
+			return;
+		}
 		std::vector<std::string>::iterator userit = user_names.begin();
 		std::cout << channel_name << std::endl;
 		for (; userit != user_names.end(); userit++)
 		{
-			// 유저가 없으면 ERR_NOTONCHANNEL
-			// if (!s->getChannel(channel_name)->isExistClient(*userit))
-			// 	exit(1);
-			Channel* chan = s->getChannel(channel_name);
 			Client& client = s->getClient(*userit);
+			// 유저가 없으면 ERR_NOTONCHANNEL
+			if (!chan->isExistClient(*userit))
+			{
+				reply(fd, 442, channel_name);
+				continue;
+			}
 
 			std::string	prefix = ":";
 			prefix += c.getNickName();
