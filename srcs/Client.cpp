@@ -28,14 +28,6 @@ Client::~Client()
 
 int	Client::parseMSG(Server *server, std::string tempStr)
 {
-	/* cmd 별로 분리
-	std::vector<Commad> cmdList;
-	cmdList에 분리된 커맨드 담기. 커맨드 만들떄는 Command cmd(tempStr);
-	커맨드 constructor에서 매개변수로 받은 스트링을 알아서 분리하여
-	cmd와 parmas로 각각 할당
-	이후 loop에서 cmd별로 함수를 불러 처리 진행
-	*/
-	// 
 	std::vector<Command> cmdList;
 	std::vector<std::string> strVec;
 	strVec = string_split(tempStr, "\r\n");
