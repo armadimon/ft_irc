@@ -13,8 +13,8 @@ Client::Client(int fd)
 	cmdList["PASS"] = cmdPass;
 	cmdList["USER"] = cmdUser;
 	cmdList["NICK"] = cmdNick;
-	// cmdList["PRIVMSG"] = cmdPrivMsg;
-	// cmdList["JOIN"] = cmdJoin;
+	cmdList["PRIVMSG"] = cmdPrivMsg;
+	cmdList["JOIN"] = cmdJoin;
 	// cmdList["KICK"] = cmdKick;
 }
 
