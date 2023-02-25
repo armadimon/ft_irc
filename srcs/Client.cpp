@@ -26,6 +26,7 @@ int	Client::parseMSG(Server *server, std::string tempStr)
 {
 	std::vector<Command> cmdList;
 	std::vector<std::string> strVec;
+
 	strVec = string_split(tempStr, "\r\n");
 	std::vector<std::string>::iterator strIter = strVec.begin();
 	for (; strIter < strVec.end(); strIter++)
