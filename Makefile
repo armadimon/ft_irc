@@ -10,7 +10,7 @@ SRC =	main.cpp \
 		srcs/Server.cpp \
 		srcs/Channel.cpp \
 		srcs/Reply.cpp \
-		# srcs/Command.cpp \
+		srcs/Command.cpp \
 
 CMD_SRC =	srcs/command/Join.cpp \
 			srcs/command/Nick.cpp \

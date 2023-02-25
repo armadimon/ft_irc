@@ -19,11 +19,30 @@
 class Server;
 class Client;
 
-void	cmdNick(Server *s, int fd, std::vector<std::string> str);
-void	cmdPass(Server *s, int fd, std::vector<std::string> str);
-void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str);
-void	cmdUser(Server *s, int fd, std::vector<std::string> str);
-void    cmdJoin(Server* s, std::vector<std::string> str);
-void	cmdKick(Server* s, int fd, std::vector<std::string> str);
+class Command
+{
+  public:
+	Command();
+	Command(std::string msg, Server *server);
+	~Command();
+
+	Server &getServer();
+	std::vector<std::string> &getParams();
+	std::string getCmd();
+	std::string	getTrailing();
+
+  private:
+	std::string	cmd;
+	std::vector<std::string> params;
+	std::string trailing;
+	Server	*server;
+};
+
+void	cmdPass(Command cmd, int fd);
+void	cmdUser(Command cmd, int fd);
+void	cmdNick(Command cmd, int fd);
+void	cmdPrivMsg(Command cmd, int fd);
+void	cmdJoin(Command cmd, int fd);
 
 #endif
+
