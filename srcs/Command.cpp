@@ -5,7 +5,6 @@ Command::Command() {}
 Command::Command(std::string msg, Server *server)
 : server(server)
 {
-	std::cout << "cmd cons" << std::endl;
 	std::cout << msg << std::endl;
 	std::vector<std::string> strList;
 	if (msg.empty())
@@ -13,10 +12,11 @@ Command::Command(std::string msg, Server *server)
 	if (msg.find_first_of(":") != std::string::npos)
 	{
 		std::cout << "check 1" << std::endl;
-		std::vector<std::string> trailing = string_split(msg, ":"); 
-		strList = string_split(trailing[0], " "); 
-		std::string tempStr = ":";
-		tempStr += trailing[1];
+		std::string trailing = msg.substr(msg.find_first_of(":"));
+		std::string rStr = msg.substr(0, msg.find_first_of(":"));
+		strList = string_split(rStr, " "); 
+		std::string tempStr = "";
+		tempStr += trailing;
 		trim(tempStr, "\r\n");
 		this->trailing = tempStr;
 	}

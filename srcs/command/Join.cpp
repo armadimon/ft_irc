@@ -66,23 +66,7 @@ void cmdJoin(Command cmd, int fd)
 		prefix += c.getHostName();
 		prefix += " ";
 
-		std::vector<std::string>::iterator nameIter = channels_name.end() - 1;
-
-		// size_t endPos = nameIter->find_last_not_of("\n\r");
-		// if (endPos != std::string::npos)
-		// 	*nameIter = nameIter->substr(0, endPos +1);
-		
-		// std::cout << channels_name.size() << std::endl;
-
 		std::vector<std::string>::iterator keyIter = channels_passwd.begin();
-		// if (keyIter < channels_passwd.end())
-		// {
-		// 	endPos = keyIter->find_last_not_of("\n\r");
-		// 	if (endPos != std::string::npos)
-		// 		*keyIter = keyIter->substr(0, endPos +1);
-		// }
-		// keyIter = channels_passwd.begin();
-
 		for (size_t i = 0; i < channels_name.size(); i++)
 		{
 			std::string key = keyIter < channels_passwd.end() ? *keyIter++ : "";
@@ -119,7 +103,7 @@ void cmdJoin(Command cmd, int fd)
 			msg += prefix;
 			msg += "JOIN :";
 			msg += channels_name[i];
-			msg += "\r\n";;
+			msg += "\r\n";
 			std::cout << "msg : [" << msg <<  "]" << std::endl;
 			broadcast(tempCh, channels_name[i], msg);
 			nameReply = attachClientList(tempCh, channels_name[i], nameReply);

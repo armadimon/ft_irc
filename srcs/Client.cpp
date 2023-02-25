@@ -18,13 +18,9 @@ Client::Client(int fd)
 	// cmdList["KICK"] = cmdKick;
 }
 
-Client::Client()
-{ }
+Client::Client() {}
 
-Client::~Client()
-{
-
-}
+Client::~Client() {}
 
 int	Client::parseMSG(Server *server, std::string tempStr)
 {
