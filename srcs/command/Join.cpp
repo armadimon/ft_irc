@@ -57,12 +57,6 @@ void cmdJoin(Command cmd, int fd)
     {
 		channels_name = string_split(params[0], ",");
 		channels_passwd = string_split(params[1], ",");
-
-		// for (int i = 0; i < channels_name.size(); i++)
-		// 	if (channels_name[i].size() > 200 || channels_name[i].find(" ") < 0 || 
-		// 		channels_name[i].find(",") < 0 || channels_name[i].find("^G") < 0) 
-		// 		// ERR_BADCHANMASK 476
-
 		// 요청한 클라이언트의 정보를 가져와서 prefix 조합
 		std::string	prefix = ":";
 		prefix += c.getNickName();
@@ -74,20 +68,20 @@ void cmdJoin(Command cmd, int fd)
 
 		std::vector<std::string>::iterator nameIter = channels_name.end() - 1;
 
-		size_t endPos = nameIter->find_last_not_of("\n\r");
-		if (endPos != std::string::npos)
-			*nameIter = nameIter->substr(0, endPos +1);
+		// size_t endPos = nameIter->find_last_not_of("\n\r");
+		// if (endPos != std::string::npos)
+		// 	*nameIter = nameIter->substr(0, endPos +1);
 		
-		std::cout << channels_name.size() << std::endl;
+		// std::cout << channels_name.size() << std::endl;
 
 		std::vector<std::string>::iterator keyIter = channels_passwd.begin();
-		if (keyIter < channels_passwd.end())
-		{
-			endPos = keyIter->find_last_not_of("\n\r");
-			if (endPos != std::string::npos)
-				*keyIter = keyIter->substr(0, endPos +1);
-		}
-		keyIter = channels_passwd.begin();
+		// if (keyIter < channels_passwd.end())
+		// {
+		// 	endPos = keyIter->find_last_not_of("\n\r");
+		// 	if (endPos != std::string::npos)
+		// 		*keyIter = keyIter->substr(0, endPos +1);
+		// }
+		// keyIter = channels_passwd.begin();
 
 		for (size_t i = 0; i < channels_name.size(); i++)
 		{
