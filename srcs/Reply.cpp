@@ -14,8 +14,32 @@ void	reply(int fd, int replyNum, std::string msg)
 	case 366:
 		ss << ":End of NAMES list\r\n";
 		break;
+	case 403:
+		ss << ":No such channel\r\n";
+		break;
+	case 431:
+		ss << ":No nickname given\r\n";
+		break;
+	case 432:
+		ss << ":Erroneus nickname";
+		break;
+	case 433:
+		ss << ":Nickname is already in use";
+		break;
+	case 442:
+		ss << ":You're not on that channel\r\n";
+		break;
+	case 461:
+		ss << ":Not enough parameters\r\n";
+		break;
 	case 475:
 		ss << ":Cannot join channel (+k)\r\n";
+		break;
+	case 476:
+		// ERR_BADCHANMASK
+		break;
+	case 482:
+		ss << ":You're not channel operator\r\n";
 		break;
 	default:
 		break;
