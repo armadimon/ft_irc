@@ -21,10 +21,10 @@ void	reply(int fd, int replyNum, std::string msg)
 		ss << ":No nickname given\r\n";
 		break;
 	case 432:
-		ss << ":Erroneus nickname";
+		ss << ":Erroneus nickname\r\n";
 		break;
 	case 433:
-		ss << ":Nickname is already in use";
+		ss << ":Nickname is already in use\r\n";
 		break;
 	case 442:
 		ss << ":You're not on that channel\r\n";
