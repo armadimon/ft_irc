@@ -60,6 +60,15 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 * numeric reply
 * Channel Class 일부 리팩토링
 
+### 2월 24일 (금)
+* Command 클래스 구현
+* 명령어 리팩토링
+
+### 2월 25일 (토)
+* KICK 커맨드 구현
+* Command 클래스 적용
+* 일부 Numeric Reply 구현
+
 ### TODO
 
 * client 인증 시스템 보완 - 현재 state는
@@ -73,7 +82,6 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 
 * 프라이빗 메시지, JOIN 완성, 채널 기능 완성
 * NOTICE 구현
-* KICK 구현
 * reply 구현
 * operator privileged command 구현
 * 리팩토링
