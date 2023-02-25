@@ -1,11 +1,10 @@
 #include "../includes/Client.hpp"
-// #include ""
 
-void	cmdPass(Server *s, int fd, std::vector<std::string> str);
-void	cmdUser(Server *s, int fd, std::vector<std::string> str);
-void	cmdNick(Server *s, int fd, std::vector<std::string> str);
-void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str);
-void	cmdJoin(Server *s, int fd, std::vector<std::string> str);
+void	cmdPass(Command cmd, int fd);
+void	cmdUser(Command cmd, int fd);
+void	cmdNick(Command cmd, int fd);
+void	cmdPrivMsg(Command cmd, int fd);
+void	cmdJoin(Command cmd, int fd);
 
 Client::Client(int fd)
 	:fd(fd), userState(DEFAULT)
@@ -14,9 +13,9 @@ Client::Client(int fd)
 	cmdList["PASS"] = cmdPass;
 	cmdList["USER"] = cmdUser;
 	cmdList["NICK"] = cmdNick;
-	cmdList["PRIVMSG"] = cmdPrivMsg;
-	cmdList["JOIN"] = cmdJoin;
-	cmdList["KICK"] = cmdKick;
+	// cmdList["PRIVMSG"] = cmdPrivMsg;
+	// cmdList["JOIN"] = cmdJoin;
+	// cmdList["KICK"] = cmdKick;
 }
 
 Client::Client()
@@ -27,37 +26,40 @@ Client::~Client()
 
 }
 
-int	Client::parseMSG(std::string tempStr)
+int	Client::parseMSG(Server *server, std::string tempStr)
 {
-	if (tempStr.empty()) return (1);
-
-	// this->msg = string_split(tempStr, " ");
-	if (tempStr.find_first_of(":") != std::string::npos)
+	/* cmd 별로 분리
+	std::vector<Commad> cmdList;
+	cmdList에 분리된 커맨드 담기. 커맨드 만들떄는 Command cmd(tempStr);
+	커맨드 constructor에서 매개변수로 받은 스트링을 알아서 분리하여
+	cmd와 parmas로 각각 할당
+	이후 loop에서 cmd별로 함수를 불러 처리 진행
+	*/
+	// 
+	std::vector<Command> cmdList;
+	std::vector<std::string> strVec;
+	strVec = string_split(tempStr, "\r\n");
+	std::vector<std::string>::iterator strIter = strVec.begin();
+	for (; strIter < strVec.end(); strIter++)
 	{
-		std::cout << "check 1" << std::endl;
-		std::vector<std::string> trailing = string_split(tempStr, ":"); 
-		this->msg = string_split(trailing[0], " "); 
-		std::string tempStr = ":";
-		tempStr += trailing[1];
-		this->msg.push_back(tempStr);
+		std::cout << "check cmd" << std::endl;
+		Command cmd(*strIter, server);
+		std::cout << cmd.getCmd() << std::endl;
+		cmdList.push_back(cmd);
 	}
-	else
-		this->msg = string_split(tempStr, " ");
-
-	// std::vector<std::string>::iterator iter = this->msg.begin();
-	// for (; iter < this->msg.end(); iter++)
-	// {
-
-	// 	std::cout << "msg : [" << *iter << "]   size : " << msg.size() << std::endl;
-	// }
+	std::vector<Command>::iterator cmdIter = cmdList.begin();
+	for (; cmdIter < cmdList.end(); cmdIter++)
+	{
+		this->excute(*cmdIter);
+	}
 	return (0); 
 }
 
-void	Client::excute(Server *server)
+void	Client::excute(Command cmd)
 {
-	std::cout << "msg : " << *(msg.begin()) << std::endl;
-	if (cmdList.find(*(msg.begin())) != cmdList.end())
-		cmdList[*(msg.begin())](server, this->getFD(), msg);
+	// std::cout << "msg : " << *(msg.begin()) << std::endl;
+	if (cmdList.find(cmd.getCmd()) != cmdList.end())
+		cmdList[cmd.getCmd()](cmd, this->getFD());
 	// registerClient();
 	std::vector<std::string>::iterator it = this->msg.begin();
 	for (; it < this->msg.end(); it++)

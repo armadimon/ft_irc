@@ -20,20 +20,21 @@ enum State
 };
 
 class Server;
+class Command;
 
 class Client
 {
     public : 
-		std::map<std::string, void(*)(Server *, int, std::vector<std::string>)> cmdList;
+		std::map<std::string, void(*)(Command, int)> cmdList;
 	
 		Client();
 		Client(int fd);
 		~Client();
 		char						*getBuf();
 		int							getFD();
-		int							parseMSG(std::string tempStr);
+		int							parseMSG(Server *server, std::string tempStr);
 		void						registerClient();
-		void						excute(Server *server);
+		void						excute(Command cmd);
 		void						setRealName(std::string str);
 		void						setNickName(std::string str);
 		void						setUserName(std::string str);

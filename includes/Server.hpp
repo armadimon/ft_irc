@@ -21,16 +21,17 @@
 class Channel;
 
 class Server
-{
+{ 	
   public:
 	Server();
 	~Server();
-	Client *getClient(int client_fd);
-	Client *getClient(std::string name);
+	Client &getClient(int client_fd);
+	Client &getClient(std::string name);
 	std::map<int, Client *> getClients();
-	std::map<std::string, Channel *> getChannel();
-	Channel *findChannel(std::string name);
+	std::map<std::string, Channel *> &getChannels();
+	Channel *getChannel(std::string chName);
 	void setChannel(std::string chName, int fd);
+	void setChannel(std::string chName, std::string key,int fd);
 	void addChannel();
 	void setClient(std::map<int, Client> c);
 	void clientRead(int client_fd);

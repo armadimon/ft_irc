@@ -3,19 +3,19 @@
 void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 {
 	std::vector<std::string>::iterator it = str.begin();
-	Client *c = s->getClient(fd);
+	Client &c = s->getClient(fd);
 
 	std::string temp = ":";
 	std::vector<int> reciver;
 
 	int cnt = 0;
-	if (c->getUserState() == REGISTER)
+	if (c.getUserState() == REGISTER)
 	{
-		temp += c->getNickName();
+		temp += c.getNickName();
 		temp += "!";
-		temp += c->getUserName();
+		temp += c.getUserName();
 		temp += "@";
-		temp += c->getHostName();
+		temp += c.getHostName();
 		temp += " ";
 		for (; it < str.end(); it++)
 		{
@@ -25,15 +25,20 @@ void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 				{
 					std::string tempStr = *it;
 					std::cout << "PRIV check" << std::endl;
-					std::map<int, Client *> tempCli = s->getChannel()[trim(tempStr, "#")]->getClientList();
-					std::map<int, Client *>::iterator clientIt = tempCli.begin();
+					// 
+					std::map<std::string, Channel *> tempCh = s->getChannels();
+					if (tempCh.size()  == 0)
+						return ;
+					std::map<int, std::string> tempCli = s->getChannels()[tempStr]->getClientList();
+					std::map<int, std::string>::iterator clientIt = tempCli.begin();
 
 					std::cout << "PRIV check 2" << std::endl;
 					while (clientIt != tempCli.end())
 					{
 
 					std::cout << "PRIV check 3" << std::endl;
-						reciver.push_back(clientIt->second->getFD());
+						if (clientIt->first != c.getFD())
+							reciver.push_back(clientIt->first);
 						clientIt++;
 					}
 				}
@@ -55,7 +60,7 @@ void	cmdPrivMsg(Server *s, int fd, std::vector<std::string> str)
 				}
 			}
 			temp += *it;
-			if (cnt != 2)
+			if (it + 1 != str.end())
 				temp += " ";
 			cnt++;
 		}

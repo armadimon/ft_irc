@@ -17,12 +17,14 @@ class Channel
   public:
 	Channel();
 	Channel(std::string n, int user_fd);
+	Channel(std::string n, std::string key, int user_fd);
 	~Channel();
 	int getOperatorFD();
 	std::string getChannelName();
 	std::string getPassword();
-	std::map<int, Client*> getClientList();
-	void addClient(int fd, Client* client);
+	void		setPassword();
+	std::map<int, std::string> getClientList();
+	void addClient(int fd, std::string clientName);
 	void removeClient(int fd);
 	void removeClient(std::string name);
 	// 채널로 PRIVMSG를 보내면, 채널이 해당 내용을 client_list에 PRIVMSG를 보내주는 함수
@@ -31,7 +33,7 @@ class Channel
 	std::string	name;
 	std::string passwd;
 	int oper_fd;
-	std::map<int, Client*> client_list;
+	std::map<int, std::string> client_list;
 };
 
 #endif

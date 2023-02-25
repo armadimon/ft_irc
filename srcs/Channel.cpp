@@ -4,6 +4,8 @@ Channel::Channel() : name(), passwd(), oper_fd(), client_list() {}
 
 Channel::Channel(std::string n, int user_fd) : name(n), oper_fd(user_fd), client_list() {}
 
+Channel::Channel(std::string n, std::string key, int user_fd) : name(n), passwd(key), oper_fd(user_fd), client_list() {}
+
 Channel::~Channel() {}
 
 std::string Channel::getChannelName()
@@ -21,16 +23,16 @@ int Channel::getOperatorFD()
 	return this->oper_fd;
 }
 
-std::map<int, Client*> Channel::getClientList()
+std::map<int, std::string> Channel::getClientList()
 {
 	return this->client_list;
 }
 
-void Channel::addClient(int fd, Client* client)
+void Channel::addClient(int fd, std::string clientName)
 {
-	if (client == nullptr)
-		exit(1);
-	this->client_list.insert(std::make_pair(fd, client));
+	// if (clientName == nullptr)
+	// 	exit(1);
+	this->client_list.insert(std::make_pair(fd, clientName));
 }
 
 void Channel::removeClient(int fd)
@@ -40,10 +42,10 @@ void Channel::removeClient(int fd)
 
 void Channel::removeClient(std::string name)
 {
-	std::map<int, Client*>::iterator it = this->client_list.begin();
+	std::map<int, std::string>::iterator it = this->client_list.begin();
 	for (; it != this->client_list.end(); it++)
 	{
-		if (name == (*it).second->getNickName())
+		if (name == (*it).second)
 			this->client_list.erase(it);
 	}
 }

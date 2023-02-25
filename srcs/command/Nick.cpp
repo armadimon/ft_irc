@@ -1,25 +1,14 @@
 #include "../../includes/Command.hpp"
 
-void	cmdNick(Server *s, int fd, std::vector<std::string> str)
+void	cmdNick(Command cmd, int fd)
 {
-	std::vector<std::string>::iterator it = str.begin();
-	Client *c = s->getClient(fd);
+	// if (str.size() < 1) // ERR_NONICKNAMEGIVEN 431
+	std::vector<std::string> params = cmd.getParams();
+	Client &c = cmd.getServer().getClient(fd);
 
-	int cnt = 0;
-
-
-	if (c->getUserState() == REGISTER)
+	if (c.getUserState() == REGISTER)
 	{
-		for (; it < str.end(); it++)
-		{
-		std::cout << "nick cmd : " << *it << std::endl;
-			if (cnt == 1)
-			{
-				int endPos = it->find_last_not_of("\n\r");
-					c->setNickName(it->substr(0, endPos +1));
-			}
-			cnt++;
-		}
-	std::cout << "nick cmd : " << c->getNickName() << std::endl;
+		c.setNickName(params[0]);
 	}
+	std::cout << "nick cmd : " << c.getNickName() << std::endl;
 }

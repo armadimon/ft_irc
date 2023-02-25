@@ -9,7 +9,8 @@ SRC =	main.cpp \
 		srcs/Client.cpp \
 		srcs/Server.cpp \
 		srcs/Channel.cpp \
-		# srcs/Command.cpp \
+		srcs/Reply.cpp \
+		srcs/Command.cpp \
 
 CMD_SRC =	srcs/command/Join.cpp \
 			srcs/command/Nick.cpp \
