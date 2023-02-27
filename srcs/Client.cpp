@@ -1,11 +1,5 @@
 #include "../includes/Client.hpp"
 
-void	cmdPass(Command cmd, int fd);
-void	cmdUser(Command cmd, int fd);
-void	cmdNick(Command cmd, int fd);
-void	cmdPrivMsg(Command cmd, int fd);
-void	cmdJoin(Command cmd, int fd);
-
 Client::Client(int fd)
 	:fd(fd), userState(DEFAULT)
 {
@@ -14,6 +8,7 @@ Client::Client(int fd)
 	cmdList["USER"] = cmdUser;
 	cmdList["NICK"] = cmdNick;
 	cmdList["PRIVMSG"] = cmdPrivMsg;
+	cmdList["NOTICE"] = cmdNotice;
 	cmdList["JOIN"] = cmdJoin;
 	cmdList["KICK"] = cmdKick;
 	cmdList["PART"] = cmdPart;
