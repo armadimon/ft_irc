@@ -28,7 +28,7 @@ void	cmdPass(Command cmd, int fd)
 	else if (c.getUserState() == REGISTER)
 	{
 		// ERR_ALREADYREGISTRED 462 
-		reply(fd, 462, NULL);
+		reply(fd, 462, cmd.getCmd());
 		return;
 	}
 }
