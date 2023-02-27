@@ -18,6 +18,7 @@ CMD_SRC =	srcs/command/Join.cpp \
 			srcs/command/PrivMsg.cpp \
 			srcs/command/User.cpp \
 			srcs/command/Kick.cpp \
+			srcs/command/Part.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 CMD_OBJ = $(CMD_SRC:.cpp=.o)
