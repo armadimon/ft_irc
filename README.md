@@ -79,6 +79,7 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 * PRIVMSG reply 추가
 * JOIN reply 추가
 * 이외 reply 추가되었는지 확인
+* 채널 삭제 관리
 * 리팩토링
 * 강제종료 후 leak 검사
 * 테스트
