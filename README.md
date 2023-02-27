@@ -71,18 +71,15 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 
 ### 2월 27일 (월)
 * PART 커맨드 구현
+* NOTICE 구현
+* client 인증 시스템 보완
+* 끊어서 보낸 커맨드 '\n' 만날 때까지 ReadBuf에서 이어붙이기
 
 ### TODO
-
-* client 인증 시스템 보완 - 현재 state는
-   1. DEFAULT,
-   2.	PWSET,
-   3.	REGISTER,
-   4.	UNREGISTER,
-   4개로 구성되어있고, 커맨드 구현하면서 state에 대한 구분을 더 세부적으로 해야할 수도있음.
-* NOTICE 구현
-* reply 구현
-* 끊어서 보낸 커맨드 '\n' 만날 때까지 ReadBuf에서 이어붙이기
+* PRIVMSG reply 추가
+* JOIN reply 추가
+* 이외 reply 추가되었는지 확인
+* PASS seg fault 확인
 * 리팩토링
 * 강제종료 후 leak 검사
 * 테스트
