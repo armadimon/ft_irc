@@ -5,7 +5,7 @@ void	reply(int fd, int replyNum, std::string msg)
 {
 	std::stringstream ss;
 
-	ss << ":ircserv " << replyNum << " " << msg << " ";
+	ss << ":ircserv " << replyNum << " " << msg;
 
 	switch (replyNum)
 	{
