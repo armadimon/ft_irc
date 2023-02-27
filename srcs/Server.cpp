@@ -59,7 +59,7 @@ void Server::doSelect() {
 		throw std::runtime_error("Error: select");
 }
 
-void	Server::checkChannel(int client_fd)
+void	Server::removeClientFromChannel(int client_fd)
 {
 	std::map<std::string, Channel *>::iterator chIter = channels.begin();
 
@@ -88,7 +88,7 @@ void Server::clientRead(int client_fd)
 		FD_CLR(client_fd, &read_fds);
 		FD_CLR(client_fd, &write_fds);
     	close(client_fd);
-		checkChannel(client_fd);
+		removeClientFromChannel(client_fd);
 		std::map<int, Client *>::iterator mapIter = clients.find(client_fd);
 		if (mapIter != clients.end())
 		{
