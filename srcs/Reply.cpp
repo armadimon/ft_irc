@@ -4,13 +4,9 @@
 void	reply(int fd, int replyNum, std::string msg)
 {
 	std::stringstream ss;
-	std::vector<std::string> params = string_split(msg, ",");
 
-	if (params.size() > 1)
-		std::cout << "reply parameter : " << params[0] << std::endl;
-	else
-		std::cout << "reply parameter : " << msg << std::endl;
-	
+	ss << ":ircserv " << replyNum << " " << msg << " ";
+
 	switch (replyNum)
 	{
 	case 353:
@@ -37,7 +33,6 @@ void	reply(int fd, int replyNum, std::string msg)
 		ss << " :Nickname is already in use\r\n";
 		break;
 	case 441:
-		ss << " " << params[0] << " " << params[1];
 		ss << " :They aren't on that channel\r\n";
 		break;
 	case 436:
