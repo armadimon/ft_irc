@@ -28,14 +28,18 @@ void	cmdPart(Command cmd, int fd)
 			else
 				channel_names.push_back(tmp_channels[i]);
 		}
-		std::cout << "size : " << params.size() << std::endl;
-		std::cout << "comment size : " << comment.size() << std::endl;
 
 		std::vector<std::string>::iterator it = channel_names.begin();
 		for (; it < channel_names.end(); it++)
 		{
 			Channel *chan = cmd.getServer().getChannel(*it);
 
+			if (!chan->isExistClient(c.getNickName()))
+			{
+				reply(fd, 442, *it);
+				continue;
+			}
+			
 			std::string	prefix = ":";
 			prefix += c.getNickName();
 			prefix += "!";
@@ -58,31 +62,9 @@ void	cmdPart(Command cmd, int fd)
 				msg += (*it);
 			msg += "\r\n";
 			broadcast(cmd.getServer().getChannels(), *it, msg);
-			
-			std::map<int, std::string> clientlist = chan->getClientList();
-			std::map<int, std::string>::iterator clist_it = clientlist.begin();
-			std::cout << "[before client list]" << std::endl;
-			for (; clist_it != clientlist.end(); clist_it++)
-				std::cout << (*clist_it).second << std::endl;
 			chan->removeClient(c.getFD());
-			std::map<int, std::string> clientlist2 = chan->getClientList();
-			std::map<int, std::string>::iterator clist_it2 = clientlist2.begin();
-			std::cout << "[after client list]" << std::endl;
-			for (; clist_it2 != clientlist2.end(); clist_it2++)
-				std::cout << (*clist_it2).second << std::endl;
-
 			// 클라이언트의 myChannelList에서 해당 채널을 삭제.
-			std::vector<std::string> chanlist = c.getmyChannelList();
-			std::vector<std::string>::iterator list_it = chanlist.begin();
-			std::cout << "[before channel list]" << std::endl;
-			for (; list_it < chanlist.end(); list_it++)
-				std::cout << *list_it << std::endl;
 			c.removeChannelFromList(*it);		
-			std::vector<std::string> chanlist2 = c.getmyChannelList();
-			std::vector<std::string>::iterator list_it2 = chanlist2.begin();
-			std::cout << "[after channel list]" << std::endl;
-			for (; list_it2 < chanlist2.end(); list_it2++)
-				std::cout << *list_it2 << std::endl;
 		}
 	}
 }
