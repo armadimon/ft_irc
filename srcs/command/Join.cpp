@@ -82,6 +82,8 @@ void cmdJoin(Command cmd, int fd)
 
 			if (ChIt != tempCh.end())
 			{
+				std::cout << "input : " << key << std::endl;
+				std::cout << "password : " << s.getChannel(channels_name[i])->getPassword() << std::endl;
 				if (s.getChannel(channels_name[i])->getPassword() != key)
 				{
 					reply(fd, 475, channels_name[i]);

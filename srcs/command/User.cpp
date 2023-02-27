@@ -21,4 +21,8 @@ void	cmdUser(Command cmd, int fd)
 		std::cout << "User cmd : " << c.getHostName() << std::endl;
 		std::cout << "User cmd : " << c.getRealName() << std::endl;
 	}
+	else if (c.getUserState() == REGISTER)
+	{
+		
+	}
 }
