@@ -71,8 +71,16 @@ void Server::clientRead(int client_fd)
 		FD_CLR(client_fd, &read_fds);
 		FD_CLR(client_fd, &write_fds);
     	close(client_fd);
-		delete clients[client_fd];
+		// s.observe (channel.deleteClient(client_nickname) == 1);
+		// delete clients[client_fd];
+		std::map<int, Client *>::iterator mapIter = clients.find(client_fd);
+		if (mapIter != clients.end())
+		{
+			delete clients[client_fd];
+			clients.erase(mapIter);
+		}
     	printf("client #%d gone away\n", client_fd);
+		return ;
     }
 	std::string tempStr(bufRead);
 	memset(bufRead, 0, 4096);
