@@ -85,9 +85,17 @@ void	Client::registerClient() // 매개변수에 server class를 넣을 것인�
 }
 
 
-void	Client::addmyChannelList(std::string channel_name)
+int	Client::addmyChannelList(std::string channel_name)
 {
+	std::vector<std::string>::iterator strIter = myChannelList.begin();
+
+	for (; strIter != myChannelList.end(); strIter++)
+	{
+		if (*strIter == channel_name)
+			return (0);
+	}
 	this->myChannelList.push_back(channel_name);
+	return (1);
 }
 
 char	*Client::getBuf()

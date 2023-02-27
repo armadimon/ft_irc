@@ -60,13 +60,6 @@ void cmdJoin(Command cmd, int fd)
 		if (params.size() > 1)
 			channels_passwd = string_split(params[1], ",");
 		// 요청한 클라이언트의 정보를 가져와서 prefix 조합
-		std::string	prefix = ":";
-		prefix += c.getNickName();
-		prefix += "!";
-		prefix += c.getUserName();
-		prefix += "@";
-		prefix += c.getHostName();
-		prefix += " ";
 
 		std::vector<std::string>::iterator keyIter = channels_passwd.begin();
 		for (size_t i = 0; i < channels_name.size(); i++)
@@ -82,18 +75,19 @@ void cmdJoin(Command cmd, int fd)
 
 			if (ChIt != tempCh.end())
 			{
-				std::cout << "input : " << key << std::endl;
-				std::cout << "password : " << s.getChannel(channels_name[i])->getPassword() << std::endl;
+				std::cout << "JOIN CHECK 1" << std::endl;
 				if (s.getChannel(channels_name[i])->getPassword() != key)
 				{
 					reply(fd, 475, channels_name[i]);
 					continue;
 				}
 				s.getChannels()[channels_name[i]]->addClient(fd, c.getNickName());
-				c.addmyChannelList(channels_name[i]);
+				if (c.addmyChannelList(channels_name[i]) == 0)
+					continue ;
 			}
 			else
 			{
+				std::cout << "JOIN CHECK 1" << std::endl;
 				// 새로 채널 만들기
 				if (key != "")
 					s.setChannel(channels_name[i], channels_passwd[i], fd);
@@ -103,11 +97,9 @@ void cmdJoin(Command cmd, int fd)
 				c.addmyChannelList(channels_name[i]);
 				// 해당 클라이언트가 join했다고 채널에 메세지 날리기
 			}
+			std::string	prefix = makePrefix(c);
 			std::string msg = "";
-			msg += prefix;
-			msg += "JOIN :";
-			msg += channels_name[i];
-			msg += "\r\n";
+			msg += prefix + "JOIN :" + channels_name[i] + "\r\n";
 			std::cout << "msg : [" << msg <<  "]" << std::endl;
 			broadcast(tempCh, channels_name[i], msg);
 			nameReply = attachClientList(tempCh, channels_name[i], nameReply);

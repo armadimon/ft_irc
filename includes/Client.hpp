@@ -48,7 +48,7 @@ class Client
 		std::string 				getRealName();
 		State						getUserState();
         std::vector<std::string>	getmyChannelList();
-		void						addmyChannelList(std::string channel_name);
+		int							addmyChannelList(std::string channel_name);
 		void						removeChannelFromList(std::string channel_name);
 		    // getter, setter
 		// void	partMyChannel(); //vector.erase 클라이언트가 채널을 나갈 때 
