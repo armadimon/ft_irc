@@ -41,7 +41,7 @@ void	reply(int fd, int replyNum, std::string msg)
 		ss << " :They aren't on that channel\r\n";
 		break;
 	case 436:
-		ss << ":Nickname collision KIL\r\n";
+		ss << " :Nickname collision KIL\r\n";
 		break;
 	case 442:
 		ss << " :You're not on that channel\r\n";
