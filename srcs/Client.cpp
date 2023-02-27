@@ -80,7 +80,10 @@ void	Client::excute(Command cmd)
 
 void	Client::registerClient() // 매개변수에 server class를 넣을 것인가 아니()
 {
-	if (this->nickName.size() > 0)
+	if (this->nickName.size() > 0 &&
+		this->hostName.size() > 0 &&
+		this->userName.size() > 0 &&
+		this->realName.size() > 0 )
 		userState = REGISTER;
 }
 

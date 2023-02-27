@@ -4,12 +4,15 @@ static std::string makeNameReply(std::string nickName, std::string chName, std::
 {
 	std::string str = "";
 
-	str += nickName;
-	str += " ";
-	str += chMode;
-	str += " ";
-	str += chName;
-	str += " ";
+	str += nickName + " " + chMode + " " + chName + " ";
+	return (str);
+}
+
+static std::string makeEonReply(std::string nickName, std::string chName)
+{
+	std::string str = "";
+
+	str += nickName + " " + chName + " ";
 	return (str);
 }
 
@@ -32,17 +35,6 @@ static std::string attachClientList(std::map<std::string, Channel *> tempCh, std
 	return (nameReply);
 }
 
-static std::string makeEonReply(std::string nickName, std::string chName)
-{
-	std::string str = "";
-
-	str += nickName;
-	str += " ";
-	str += chName;
-	str += " ";
-	return (str);
-}
-
 void cmdJoin(Command cmd, int fd)
 {
 	// if (str.size() < 1) 461 ERR_NEEDMOREPARAMS
@@ -55,27 +47,22 @@ void cmdJoin(Command cmd, int fd)
 
     if (c.getUserState() == REGISTER)
     {
-		std::cout << "check 2 " << std::endl;
 		channels_name = string_split(params[0], ",");
 		if (params.size() > 1)
 			channels_passwd = string_split(params[1], ",");
-		// 요청한 클라이언트의 정보를 가져와서 prefix 조합
 
 		std::vector<std::string>::iterator keyIter = channels_passwd.begin();
 		for (size_t i = 0; i < channels_name.size(); i++)
 		{
 			std::string key = keyIter < channels_passwd.end() ? *keyIter++ : "";
-			// 서버에 채널이 생성되어 있는지 확인
 			std::map<std::string, Channel *> &tempCh = s.getChannels();
 			std::map<std::string, Channel *>::iterator ChIt = tempCh.find(channels_name[i]);
-
-			// make reply for each channel
+	
 			std::string nameReply = makeNameReply(c.getNickName(), channels_name[i], "=");
 			std::string eonReply = makeEonReply(c.getNickName(), channels_name[i]);
 
 			if (ChIt != tempCh.end())
 			{
-				std::cout << "JOIN CHECK 1" << std::endl;
 				if (s.getChannel(channels_name[i])->getPassword() != key)
 				{
 					reply(fd, 475, channels_name[i]);
@@ -87,7 +74,6 @@ void cmdJoin(Command cmd, int fd)
 			}
 			else
 			{
-				std::cout << "JOIN CHECK 1" << std::endl;
 				// 새로 채널 만들기
 				if (key != "")
 					s.setChannel(channels_name[i], channels_passwd[i], fd);
