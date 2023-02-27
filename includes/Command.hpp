@@ -43,6 +43,7 @@ void	cmdUser(Command cmd, int fd);
 void	cmdNick(Command cmd, int fd);
 void	cmdPrivMsg(Command cmd, int fd);
 void	cmdJoin(Command cmd, int fd);
+void	cmdKick(Command cmd, int fd);
 
 #endif
 
