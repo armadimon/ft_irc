@@ -17,6 +17,9 @@ void	reply(int fd, int replyNum, std::string msg)
 	case 403:
 		ss << " :No such channel\r\n";
 		break;
+	case 404:
+		ss << " :Cannot send to channel\r\n";
+		break;
 	case 411:
 		ss << " :No recipient given (PRIVMSG)\r\n";
 		break;
