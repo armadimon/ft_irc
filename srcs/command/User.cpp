@@ -12,7 +12,7 @@ void	cmdUser(Command cmd, int fd)
 	
 	Client &c = cmd.getServer().getClient(fd);
 	// ERR_ALREADYREGISTRED 462 = username, hostname, realname 전부 저장되있을 때
-	if (c.getUserState() == REGISTER)
+	if (c.getUserState() == PWSET || c.getUserState() == READY)
 	{
 		c.setUserName(params[0]);
 		c.setHostName(params[1]);

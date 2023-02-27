@@ -54,6 +54,18 @@ void broadcast(std::map<std::string, Channel *> tempCh, std::string chName, std:
 	} 
 }
 
+std::string	makePrefix(Client &c)
+{	
+	std::string	prefix = ":";
+	prefix += c.getNickName();
+	prefix += "!";
+	prefix += c.getUserName();
+	prefix += "@";
+	prefix += c.getHostName();
+	prefix += " ";
+	return prefix;
+}
+
 // int main()
 // {
 // 	std::string s = " abcdaaaaa  ";

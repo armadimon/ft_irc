@@ -12,7 +12,7 @@ void	cmdPass(Command cmd, int fd)
 	Client &c = cmd.getServer().getClient(fd);
 
 	std::vector<std::string>::iterator it = cmd.getParams().begin();
-	if (c.getUserState() == DEFAULT)
+	if (c.getUserState() == DEFAULT || c.getUserState() == PWSET)
 	{
 		for (; it < cmd.getParams().end(); it++)
 		{		
@@ -21,7 +21,7 @@ void	cmdPass(Command cmd, int fd)
 
 				
 				if (cmd.getServer().getPass() == *it)
-					c.setUserState();
+					c.setUserState(PWSET);
 				std::cout << "State : " << c.getUserState() << std::endl;
 		}
 	}

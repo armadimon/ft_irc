@@ -1,5 +1,11 @@
 #include "../includes/Client.hpp"
 
+void	cmdPass(Command cmd, int fd);
+void	cmdUser(Command cmd, int fd);
+void	cmdNick(Command cmd, int fd);
+void	cmdPrivMsg(Command cmd, int fd);
+void	cmdJoin(Command cmd, int fd);
+
 Client::Client(int fd)
 	:fd(fd), userState(DEFAULT)
 {
@@ -9,7 +15,7 @@ Client::Client(int fd)
 	cmdList["NICK"] = cmdNick;
 	cmdList["PRIVMSG"] = cmdPrivMsg;
 	cmdList["JOIN"] = cmdJoin;
-	cmdList["KICK"] = cmdKick;
+	// cmdList["KICK"] = cmdKick;
 }
 
 Client::Client() {}
@@ -46,16 +52,12 @@ int	Client::parseMSG(Server *server, std::string tempStr)
 		else
 		{
 			Command cmd(*strIter, server);
+			std::cout << "check 1 " << std::endl;
 			this->excute(cmd);
 		}
 
 	}
 	msgClear();
-	// std::vector<Command>::iterator cmdIter = cmdList.begin();
-	// for (; cmdIter < cmdList.end(); cmdIter++)
-	// {
-	// 	this->excute(*cmdIter);
-	// }
 	return (0); 
 }
 
@@ -67,21 +69,19 @@ void	Client::msgClear()
 
 void	Client::excute(Command cmd)
 {
-	// std::cout << "msg : " << *(msg.begin()) << std::endl;
 	if (cmdList.find(cmd.getCmd()) != cmdList.end())
 		cmdList[cmd.getCmd()](cmd, this->getFD());
-	// registerClient();
+	if (this->userState == READY)
+		registerClient();
+	std::cout << "state : " << userState << std::endl;
 
 }
 
-// void	Client::registerClient() // 매개변수에 server class를 넣을 것인가 아니()
-// {
-// 	if (this->nickName != 0 
-// 		&& this->hostName != 0
-// 		&& this->userName != 0 
-// 		&& this->realName != =)
-// 		userState = REGISTER;
-// }
+void	Client::registerClient() // 매개변수에 server class를 넣을 것인가 아니()
+{
+	if (this->nickName.size() > 0)
+		userState = REGISTER;
+}
 
 
 void	Client::addmyChannelList(std::string channel_name)
@@ -146,9 +146,9 @@ void Client::setRealName(std::string str)
 	realName = str;
 }
 
-void Client::setUserState()
+void Client::setUserState(State state)
 {
-	userState = REGISTER;
+	userState = state;
 }
 
 void	Client::removeChannelFromList(std::string channel_name)

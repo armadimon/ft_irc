@@ -55,8 +55,10 @@ void cmdJoin(Command cmd, int fd)
 
     if (c.getUserState() == REGISTER)
     {
+		std::cout << "check 2 " << std::endl;
 		channels_name = string_split(params[0], ",");
-		channels_passwd = string_split(params[1], ",");
+		if (params.size() > 1)
+			channels_passwd = string_split(params[1], ",");
 		// 요청한 클라이언트의 정보를 가져와서 prefix 조합
 		std::string	prefix = ":";
 		prefix += c.getNickName();

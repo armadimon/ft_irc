@@ -15,6 +15,7 @@ enum State
 {
 	DEFAULT,
 	PWSET,
+	READY,
 	REGISTER,
 	UNREGISTER,
 };
@@ -40,7 +41,7 @@ class Client
 		void						setNickName(std::string str);
 		void						setUserName(std::string str);
 		void						setHostName(std::string str);
-		void						setUserState();
+		void						setUserState(State state);
 		std::string					getUserName();
 		std::string 				getNickName();
 		std::string 				getHostName();
@@ -54,9 +55,9 @@ class Client
 		    //TODO : part명령어가 여러개의 채널을 동시에 떠날 수 있는지 체크하기
  
 	private :
-		bool						isOperator; //방장이면 true
+		// bool						isOperator; //방장이면 true
 		int							fd;
-		int							passwd;
+		// int							passwd;
 		State						userState;
 		std::string					msg;
 		std::string					hostName;
