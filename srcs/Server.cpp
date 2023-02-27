@@ -63,7 +63,7 @@ void	Server::removeClientFromChannel(int client_fd)
 {
 	std::map<std::string, Channel *>::iterator chIter = channels.begin();
 
-	for (; chIter != channels.end(); chIter++)
+	while (chIter != channels.end())
 	{
 		if (chIter->second->isExistClient(clients[client_fd]->getNickName()))
 			chIter->second->removeClient(client_fd);
@@ -71,8 +71,10 @@ void	Server::removeClientFromChannel(int client_fd)
 		{
 			delete chIter->second;
 			channels.erase(chIter);
-			return ;
+			chIter = channels.begin();
+			continue;
 		}
+		chIter++;
 	}
 }
 
