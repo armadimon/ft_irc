@@ -57,11 +57,6 @@ int	Client::parseMSG(Server *server, std::string tempStr)
 
 	}
 	msgClear();
-	// std::vector<Command>::iterator cmdIter = cmdList.begin();
-	// for (; cmdIter < cmdList.end(); cmdIter++)
-	// {
-	// 	this->excute(*cmdIter);
-	// }
 	return (0); 
 }
 
