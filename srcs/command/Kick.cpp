@@ -12,8 +12,9 @@ void	cmdKick(Command cmd, int fd)
 
 	Client &c = cmd.getServer().getClient(fd);
 	std::string channel_name;
+	std::vector<std::string> tmp_users;
 	std::vector<std::string> user_names;
-	std::string comment;
+	std::string comment = params[2];
 
 	if (c.getUserState() == REGISTER)
 	{
@@ -26,8 +27,6 @@ void	cmdKick(Command cmd, int fd)
 			return;
 		}
 		Channel *chan = cmd.getServer().getChannel(channel_name);
-		user_names = string_split(params[1], ",");
-		comment = params[2];
 		// 요청한 클라이언트가 실제 채널 operator인지 확인
 		if (fd != chan->getOperatorFD())
 		{
@@ -36,16 +35,26 @@ void	cmdKick(Command cmd, int fd)
 			return;
 		}
 
+		if (!chan->isExistClient(c.getNickName()))
+		{
+			reply(fd, 442, channel_name);
+			return;
+		}
+
+		tmp_users = string_split(params[1], ",");
+		for (size_t i = 0; i < tmp_users.size(); i++)
+		{
+			// 유저가 없으면 ERR_NOTONCHANNEL
+			if (!chan->isExistClient(tmp_users[i]))
+				reply(fd, 441, tmp_users[i] + "," + channel_name);
+			else
+				user_names.push_back(tmp_users[i]);
+		}
+
 		std::vector<std::string>::iterator it = user_names.begin();
 		for (; it != user_names.end(); it++)
 		{
-			// 유저가 없으면 ERR_NOTONCHANNEL
-			if (!chan->isExistClient(*it))
-			{
-				reply(fd, 442, channel_name);
-				return;
-			}
-
+			std::cout << "user : " << *it << std::endl;
 			Client& client = cmd.getServer().getClient(*it);
 			std::string	prefix = ":";
 			prefix += c.getNickName();
