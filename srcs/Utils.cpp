@@ -11,11 +11,8 @@ std::vector<std::string> string_split(std::string str, const char* delimiter)
 	char* cstr = const_cast<char*>(str.c_str());
 	char* temp;
 	temp = strtok(cstr, delimiter);
-	// std::cout << "temp [" << temp << "]" << std::endl;
-	// std::cout << "temp len : "<< strlen(temp) << std::endl;
 	while (temp != NULL)
 	{
-		// std::cout << "temp" << temp << std::endl;
 		res.push_back(temp);
 		temp = strtok(NULL, delimiter);
 	}
@@ -65,15 +62,3 @@ std::string	makePrefix(Client &c)
 	prefix += " ";
 	return prefix;
 }
-
-// int main()
-// {
-// 	std::string s = " abcdaaaaa  ";
-// 	std::string str = trim(s, " ");
-
-// 	std::cout << str << std::endl;
-// 	// std::vector<std::string>::iterator it = str.begin();
-// 	// for (; it < str.end(); it++)
-// 	// 	std::cout << *it;
-// 	return 0;
-// }

@@ -30,8 +30,6 @@ std::map<int, std::string> Channel::getClientList()
 
 void Channel::addClient(int fd, std::string clientName)
 {
-	// if (clientName == nullptr)
-	// 	exit(1);
 	this->client_list.insert(std::make_pair(fd, clientName));
 }
 

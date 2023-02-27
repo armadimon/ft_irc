@@ -71,6 +71,7 @@ void Server::clientRead(int client_fd)
 		FD_CLR(client_fd, &read_fds);
 		FD_CLR(client_fd, &write_fds);
     	close(client_fd);
+		delete clients[client_fd];
     	printf("client #%d gone away\n", client_fd);
     }
 	std::string tempStr(bufRead);
