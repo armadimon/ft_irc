@@ -51,7 +51,7 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 * trim Utility 함수 추가
 
 ### 2월 17일 (금)
-* JOIN 커맨드 
+* JOIN 커맨드 구현
 
 ### 2월 18일 (토) ~ 2월 22일 (수)
 * younjkim의 일본여행으로 인해 쉬어감 😶‍🌫️
@@ -68,6 +68,9 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 * KICK 커맨드 구현
 * Command 클래스 적용
 * 일부 Numeric Reply 구현
+
+### 2월 27일 (월)
+* PART 커맨드 구현
 
 ### TODO
 
