@@ -59,6 +59,23 @@ void Server::doSelect() {
 		throw std::runtime_error("Error: select");
 }
 
+void	Server::checkChannel(int client_fd)
+{
+	std::map<std::string, Channel *>::iterator chIter = channels.begin();
+
+	for (; chIter != channels.end(); chIter++)
+	{
+		if (chIter->second->isExistClient(clients[client_fd]->getNickName()))
+			chIter->second->removeClient(client_fd);
+		if (chIter->second->getClientList().size() == 0)
+		{
+			delete chIter->second;
+			channels.erase(chIter);
+			return ;
+		}
+	}
+}
+
 void Server::clientRead(int client_fd)
 {
 	int	r;
@@ -71,8 +88,7 @@ void Server::clientRead(int client_fd)
 		FD_CLR(client_fd, &read_fds);
 		FD_CLR(client_fd, &write_fds);
     	close(client_fd);
-		// s.observe (channel.deleteClient(client_nickname) == 1);
-		// delete clients[client_fd];
+		checkChannel(client_fd);
 		std::map<int, Client *>::iterator mapIter = clients.find(client_fd);
 		if (mapIter != clients.end())
 		{
