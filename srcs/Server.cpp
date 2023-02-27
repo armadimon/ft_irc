@@ -91,7 +91,6 @@ void Server::run()
 		{
 			if (FD_ISSET(i, &cpy_read_fds))
 			{
-				std::cout << "check" << std::endl;
 				if (i == this->fd)
 				{
 					acceptClient();

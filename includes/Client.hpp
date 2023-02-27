@@ -35,6 +35,7 @@ class Client
 		int							parseMSG(Server *server, std::string tempStr);
 		void						registerClient();
 		void						excute(Command cmd);
+		void						msgClear();
 		void						setRealName(std::string str);
 		void						setNickName(std::string str);
 		void						setUserName(std::string str);
@@ -57,7 +58,7 @@ class Client
 		int							fd;
 		int							passwd;
 		State						userState;
-		std::vector<std::string>	msg;
+		std::string					msg;
 		std::string					hostName;
 		std::string					nickName;
 		std::string					userName;

@@ -24,24 +24,51 @@ Client::~Client() {}
 
 int	Client::parseMSG(Server *server, std::string tempStr)
 {
-	std::vector<Command> cmdList;
-	std::vector<std::string> strVec;
+	std::vector<Command>		cmdList;
+	std::vector<std::string>	strVec;
+	size_t						cmdCnt = 0;
+	size_t						pos = 0;
 
+	while (pos != std::string::npos)
+	{
+		pos = tempStr.find("\n", pos);
+		if (pos != std::string::npos)
+		{
+			pos++;
+			cmdCnt++;
+		}
+	}
+	if (msg.length() > 0)
+		tempStr = msg + tempStr;
 	strVec = string_split(tempStr, "\r\n");
 	std::vector<std::string>::iterator strIter = strVec.begin();
 	for (; strIter < strVec.end(); strIter++)
 	{
-		std::cout << "check cmd" << std::endl;
-		Command cmd(*strIter, server);
-		std::cout << cmd.getCmd() << std::endl;
-		cmdList.push_back(cmd);
+		if (strIter + 1 == strVec.end() && strVec.size() != cmdCnt)
+		{
+			msg = *strIter;
+			return (0);
+		}
+		else
+		{
+			Command cmd(*strIter, server);
+			this->excute(cmd);
+		}
+
 	}
-	std::vector<Command>::iterator cmdIter = cmdList.begin();
-	for (; cmdIter < cmdList.end(); cmdIter++)
-	{
-		this->excute(*cmdIter);
-	}
+	msgClear();
+	// std::vector<Command>::iterator cmdIter = cmdList.begin();
+	// for (; cmdIter < cmdList.end(); cmdIter++)
+	// {
+	// 	this->excute(*cmdIter);
+	// }
 	return (0); 
+}
+
+void	Client::msgClear()
+{
+	msg.clear();
+	msg.reserve(0);
 }
 
 void	Client::excute(Command cmd)
@@ -50,14 +77,7 @@ void	Client::excute(Command cmd)
 	if (cmdList.find(cmd.getCmd()) != cmdList.end())
 		cmdList[cmd.getCmd()](cmd, this->getFD());
 	// registerClient();
-	std::vector<std::string>::iterator it = this->msg.begin();
-	for (; it < this->msg.end(); it++)
-	{
-		(*it).clear();
-		std::cout << "clean msg : " << *it << std::endl;
-	}
-	msg.clear();
-	msg.reserve(0);
+
 }
 
 // void	Client::registerClient() // 매개변수에 server class를 넣을 것인가 아니()

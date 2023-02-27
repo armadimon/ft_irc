@@ -73,7 +73,7 @@ void	cmdKick(Command cmd, int fd)
 			}
 			msg += "\r\n";
 			broadcast(cmd.getServer().getChannels(), channel_name, msg);
-
+	
 			// 해당 클라이언트를 채널 리스트에서 삭제
 			chan->removeClient(client.getFD());
 			// 클라이언트의 myChannelList에서 해당 채널을 삭제.
