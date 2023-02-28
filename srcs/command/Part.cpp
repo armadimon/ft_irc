@@ -40,24 +40,12 @@ void	cmdPart(Command cmd, int fd)
 				continue;
 			}
 			
-			std::string	prefix = ":";
-			prefix += c.getNickName();
-			prefix += "!";
-			prefix += c.getUserName();
-			prefix += "@";
-			prefix += c.getHostName();
-			prefix += " ";
-
+			std::string	prefix = makePrefix(c);
 			std::string msg = "";
-			msg += prefix;
-			msg += "PART ";
+			msg += prefix + "PART ";
 			// msg += channel_name;
 			if (comment.size() > 0)
-			{
-				msg += (*it);
-				msg += " ";
-				msg += comment;
-			}
+				msg += (*it) + " " + comment;
 			else
 				msg += (*it);
 			msg += "\r\n";

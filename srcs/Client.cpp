@@ -167,3 +167,15 @@ void	Client::removeChannelFromList(std::string channel_name)
 			this->myChannelList.erase(it);
 	}
 }
+
+int		Client::findChannelFromList(std::string chName)
+{
+	std::vector<std::string>::iterator vecIter = myChannelList.begin();
+
+	for (; vecIter != myChannelList.end(); vecIter++)
+	{
+		if (*vecIter == chName)
+			return (1);
+	}
+	return (0);
+}

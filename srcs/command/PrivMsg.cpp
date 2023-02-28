@@ -3,16 +3,6 @@
 void	cmdPrivMsg(Command cmd, int fd)
 {
 	std::vector<std::string> params = cmd.getParams();
-	if (params[0].empty())
-	{
-		reply(fd, 411, NULL); // ERR_NORECIPIENT
-		return;
-	}
-	if (params[1].empty())
-	{
-		reply(fd, 412, NULL); // ERR_NOTEXTTOSEND
-		return;
-	}
 	Client &c = cmd.getServer().getClient(fd);
 	Server &s = cmd.getServer();
 
@@ -22,7 +12,16 @@ void	cmdPrivMsg(Command cmd, int fd)
 	
 	if (c.getUserState() == REGISTER)
 	{
-
+		if (params[0].empty())
+		{
+			reply(fd, 411, NULL); // ERR_NORECIPIENT
+			return;
+		}
+		if (params[1].empty())
+		{
+			reply(fd, 412, NULL); // ERR_NOTEXTTOSEND
+			return;
+		}
 		recivers = string_split(params[0], ",");
 		std::vector<std::string>::iterator rIter = recivers.begin();
 		for (;rIter < recivers.end(); rIter++)

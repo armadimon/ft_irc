@@ -16,18 +16,17 @@ void	cmdPass(Command cmd, int fd)
 	{
 		for (; it < cmd.getParams().end(); it++)
 		{		
-				std::cout << "server_pass : [" << cmd.getServer().getPass() << std::endl;
-				std::cout << "input_pass : [" << *it << std::endl;
+			std::cout << "server_pass : [" << cmd.getServer().getPass() << std::endl;
+			std::cout << "input_pass : [" << *it << std::endl;
 
-				
-				if (cmd.getServer().getPass() == *it)
-					c.setUserState(PWSET);
-				std::cout << "State : " << c.getUserState() << std::endl;
+			if (cmd.getServer().getPass() == *it)
+				c.setUserState(PWSET);
+			std::cout << "State : " << c.getUserState() << std::endl;
 		}
 	}
 	else if (c.getUserState() == REGISTER)
 	{
-		// ERR_ALREADYREGISTRED 462 
+		// ERR_ALREADYREGISTRED 462
 		reply(fd, 462, cmd.getCmd());
 		return;
 	}

@@ -45,6 +45,8 @@ void cmdJoin(Command cmd, int fd)
 	std::vector<std::string> channels_name;
 	std::vector<std::string> channels_passwd;
 
+	if (cmd.getParams().size() < 1)
+		reply(fd, 461, cmd.getCmd());
     if (c.getUserState() == REGISTER)
     {
 		channels_name = string_split(params[0], ",");
@@ -61,6 +63,11 @@ void cmdJoin(Command cmd, int fd)
 			std::string nameReply = makeNameReply(c.getNickName(), channels_name[i], "=");
 			std::string eonReply = makeEonReply(c.getNickName(), channels_name[i]);
 
+			if (c.getmyChannelList().size() > 9 && c.findChannelFromList(channels_name[i]) == 0)
+			{
+				reply(fd, 405, channels_name[i]);
+				continue;
+			}
 			if (ChIt != tempCh.end())
 			{
 				if (s.getChannel(channels_name[i])->getPassword() != key)

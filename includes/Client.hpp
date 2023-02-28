@@ -50,6 +50,7 @@ class Client
         std::vector<std::string>	getmyChannelList();
 		int							addmyChannelList(std::string channel_name);
 		void						removeChannelFromList(std::string channel_name);
+		int							findChannelFromList(std::string chName);
 		    // getter, setter
 		// void	partMyChannel(); //vector.erase 클라이언트가 채널을 나갈 때 
 		    //TODO : part명령어가 여러개의 채널을 동시에 떠날 수 있는지 체크하기
