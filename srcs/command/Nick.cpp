@@ -8,17 +8,17 @@ void	cmdNick(Command cmd, int fd)
 
 	if (params.size() < 1) 
 	{
-		reply(fd, 431, NULL);
+		reply(fd, 431, c.getNickName(), NULL);
 		return;
 	}
 	if (params[0].size() > 9)
 	{
-		reply(fd, 432, params[0]);
+		reply(fd, 432, c.getNickName(), params[0]);
 		return;
 	}
 	if (cmd.getServer().isAlreadyUsed(params[0]))
 	{
-		reply(fd, 433, params[0]);
+		reply(fd, 433, c.getNickName(), params[0]);
 		return;
 	}
 	if (c.getUserState() == PWSET)
@@ -31,7 +31,7 @@ void	cmdNick(Command cmd, int fd)
 
 		if (s.isAlreadyUsed(params[0]))
 		{
-			reply(fd, 436, params[0]);
+			reply(fd, 436, c.getNickName(), params[0]);
 		}
 		else
 		{

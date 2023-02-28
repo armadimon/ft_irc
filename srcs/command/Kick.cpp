@@ -5,12 +5,6 @@ void	cmdKick(Command cmd, int fd)
 {
 	std::vector<std::string> params = cmd.getParams();
 	std::string comment;
-
-	if (params.size() < 2)
-	{
-		reply(fd, 461, cmd.getCmd());
-		return;
-	}
 	if (params.size() == 3)	comment = params[2];
 	else if (!cmd.getTrailing().empty()) comment = cmd.getTrailing();
 
@@ -21,6 +15,11 @@ void	cmdKick(Command cmd, int fd)
 
 	if (c.getUserState() == REGISTER)
 	{
+		if (params.size() < 2)
+		{
+			reply(fd, 461, c.getNickName(), cmd.getCmd());
+			return;
+		}
 		channel_name = params[0];
 		if (channel_name.size() > 50)
 		{
@@ -32,7 +31,7 @@ void	cmdKick(Command cmd, int fd)
 		if (!cmd.getServer().isExistChannel(channel_name))
 		{
 			// ERR_NOSUCHCHANNEL
-			reply(fd, 403, channel_name);
+			reply(fd, 403, c.getNickName(), channel_name);
 			return;
 		}
 		Channel *chan = cmd.getServer().getChannel(channel_name);
@@ -40,13 +39,13 @@ void	cmdKick(Command cmd, int fd)
 		if (fd != chan->getOperatorFD())
 		{
 			// ERR_CHANOPRIVSNEEDED
-			reply(fd, 482, channel_name);
+			reply(fd, 482, c.getNickName(), channel_name);
 			return;
 		}
 
 		if (!chan->isExistClient(c.getNickName()))
 		{
-			reply(fd, 442, channel_name);
+			reply(fd, 442, c.getNickName(), channel_name);
 			return;
 		}
 
@@ -55,7 +54,7 @@ void	cmdKick(Command cmd, int fd)
 		{
 			// 유저가 없으면 ERR_NOTONCHANNEL
 			if (!chan->isExistClient(tmp_users[i]))
-				reply(fd, 441, tmp_users[i] + " " + tmp_users[i] + " " + channel_name);
+				reply(fd, 441, c.getNickName(), tmp_users[i] + " " + tmp_users[i] + " " + channel_name);
 			else
 				user_names.push_back(tmp_users[i]);
 		}

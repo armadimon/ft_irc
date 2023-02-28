@@ -1,18 +1,18 @@
 #include "../../includes/Command.hpp"
 
-static std::string makeNameReply(std::string nickName, std::string chName, std::string chMode)
+static std::string makeNameReply(std::string chName, std::string chMode)
 {
 	std::string str = "";
 
-	str += nickName + " " + chMode + " " + chName + " ";
+	str += chMode + " " + chName + " ";
 	return (str);
 }
 
-static std::string makeEonReply(std::string nickName, std::string chName)
+static std::string makeEonReply(std::string chName)
 {
 	std::string str = "";
 
-	str += nickName + " " + chName + " ";
+	str += chName + " ";
 	return (str);
 }
 
@@ -45,6 +45,8 @@ void cmdJoin(Command cmd, int fd)
 	std::vector<std::string> channels_name;
 	std::vector<std::string> channels_passwd;
 
+	if (cmd.getParams().size() < 1)
+		reply(fd, 461, c.getNickName(), cmd.getCmd());
     if (c.getUserState() == REGISTER)
     {
 		channels_name = string_split(params[0], ",");
@@ -63,14 +65,19 @@ void cmdJoin(Command cmd, int fd)
 			std::map<std::string, Channel *> &tempCh = s.getChannels();
 			std::map<std::string, Channel *>::iterator ChIt = tempCh.find(channels_name[i]);
 	
-			std::string nameReply = makeNameReply(c.getNickName(), channels_name[i], "=");
-			std::string eonReply = makeEonReply(c.getNickName(), channels_name[i]);
+			std::string nameReply = makeNameReply(channels_name[i], "=");
+			std::string eonReply = makeEonReply(channels_name[i]);
 
+			if (c.getmyChannelList().size() > 9 && c.findChannelFromList(channels_name[i]) == 0)
+			{
+				reply(fd, 405, c.getNickName(), channels_name[i]);
+				continue;
+			}
 			if (ChIt != tempCh.end())
 			{
 				if (s.getChannel(channels_name[i])->getPassword() != key)
 				{
-					reply(fd, 475, channels_name[i]);
+					reply(fd, 475, c.getNickName(), channels_name[i]);
 					continue;
 				}
 				s.getChannels()[channels_name[i]]->addClient(fd, c.getNickName());
@@ -94,8 +101,8 @@ void cmdJoin(Command cmd, int fd)
 			std::cout << "msg : [" << msg <<  "]" << std::endl;
 			broadcast(tempCh, channels_name[i], msg);
 			nameReply = attachClientList(tempCh, channels_name[i], nameReply);
-			reply(fd, 353, nameReply);
-			reply(fd, 366, eonReply);
+			reply(fd, 353, c.getNickName(), nameReply);
+			reply(fd, 366, c.getNickName(), eonReply);
 			if (keyIter < channels_passwd.end())
 				keyIter++;
 		}

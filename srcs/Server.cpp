@@ -54,7 +54,6 @@ void Server::createSocket()
 
 void Server::doSelect() {
 	is_set = select(fd_max + 2, &cpy_read_fds, &cpy_write_fds, NULL, NULL);
-	// std::cout << "is_set : " << is_set << std::endl;
 	if (is_set == -1)
 		throw std::runtime_error("Error: select");
 }
@@ -217,8 +216,3 @@ bool Server::isExistChannel(std::string channel_name)
 		return false;
 	return true;
 }
-
-// Channel *Server::findChannel(std::string name)
-// {
-// 	return this->channels.find(name)->second;
-// }

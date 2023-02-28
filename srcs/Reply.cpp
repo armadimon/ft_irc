@@ -1,12 +1,13 @@
 #include "../includes/Utils.hpp"
 #include "../includes/Server.hpp"
 
-void	reply(int fd, int replyNum, std::string msg)
+void	reply(int fd, int replyNum, std::string cName, std::string msg)
 {
 	std::stringstream ss;
 
-	ss << ":ircserv " << replyNum << " " << msg;
+	ss << ":ircserv " << replyNum << " " << cName << " " << msg;
 
+	std::cout << "[" << msg << "]" << std::endl;
 	switch (replyNum)
 	{
 	case 353:
@@ -19,6 +20,9 @@ void	reply(int fd, int replyNum, std::string msg)
 		break;
 	case 404:
 		ss << " :Cannot send to channel\r\n";
+		break;
+	case 405:
+		ss << " :You have joined too many channels\r\n";
 		break;
 	case 411:
 		ss << " :No recipient given (PRIVMSG)\r\n";
