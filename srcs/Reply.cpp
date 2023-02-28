@@ -60,7 +60,7 @@ void	reply(int fd, int replyNum, std::string cName, std::string msg)
 		ss << " :Cannot join channel (+k)\r\n";
 		break;
 	case 476:
-		// ERR_BADCHANMASK
+		ss << " :Invalid channel name\r\n";
 		break;
 	case 482:
 		ss << " :You're not channel operator\r\n";
