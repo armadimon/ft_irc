@@ -1,11 +1,11 @@
 #include "../includes/Utils.hpp"
 #include "../includes/Server.hpp"
 
-void	reply(int fd, int replyNum, std::string msg)
+void	reply(int fd, int replyNum, std::string cName, std::string msg)
 {
 	std::stringstream ss;
 
-	ss << ":ircserv " << replyNum << " " << msg;
+	ss << ":ircserv " << replyNum << " " << cName << " " << msg;
 
 	std::cout << "[" << msg << "]" << std::endl;
 	switch (replyNum)
