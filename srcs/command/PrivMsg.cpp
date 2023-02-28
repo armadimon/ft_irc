@@ -16,12 +16,12 @@ void	cmdPrivMsg(Command cmd, int fd)
 	{
 		if (params[0].empty())
 		{
-			reply(fd, 411, c.getNickName(), " "); // ERR_NORECIPIENT
+			reply(fd, 411, c.getNickName(), ""); // ERR_NORECIPIENT
 			return;
 		}
 		if (params[1].empty())
 		{
-			reply(fd, 412, c.getNickName(), " "); // ERR_NOTEXTTOSEND
+			reply(fd, 412, c.getNickName(), ""); // ERR_NOTEXTTOSEND
 			return;
 		}
 		recivers = string_split(params[0], ",");

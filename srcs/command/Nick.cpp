@@ -8,7 +8,7 @@ void	cmdNick(Command cmd, int fd)
 
 	if (params.size() < 1) 
 	{
-		reply(fd, 431, c.getNickName(), NULL);
+		reply(fd, 431, c.getNickName(), "");
 		return;
 	}
 	if (params[0].size() > 9)
@@ -40,5 +40,4 @@ void	cmdNick(Command cmd, int fd)
 			send(fd, str.c_str(), str.size(), 0);
 		}
 	}
-	std::cout << "nick cmd : " << c.getNickName() << std::endl;
 }
