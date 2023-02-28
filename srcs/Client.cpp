@@ -48,7 +48,6 @@ int	Client::parseMSG(Server *server, std::string tempStr)
 		else
 		{
 			Command cmd(*strIter, server);
-			std::cout << "check 1 " << std::endl;
 			this->excute(cmd);
 		}
 
@@ -69,17 +68,19 @@ void	Client::excute(Command cmd)
 		cmdList[cmd.getCmd()](cmd, this->getFD());
 	if (this->userState == READY)
 		registerClient();
-	std::cout << "state : " << userState << std::endl;
-
 }
 
-void	Client::registerClient() // 매개변수에 server class를 넣을 것인가 아니()
+void	Client::registerClient()
 {
 	if (this->nickName.size() > 0 &&
 		this->hostName.size() > 0 &&
 		this->userName.size() > 0 &&
 		this->realName.size() > 0 )
+	{
 		userState = REGISTER;
+		std::string str = ":wellcome to IRC\r\n";
+		reply(fd, 372, nickName, str);
+	}
 }
 
 
