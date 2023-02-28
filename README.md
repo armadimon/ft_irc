@@ -75,10 +75,12 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 * client 인증 시스템 보완
 * 끊어서 보낸 커맨드 '\n' 만날 때까지 ReadBuf에서 이어붙이기
 
+### 2월 28일 (화)
+* reply 추가
+* 
+
 ### TODO
-* PRIVMSG reply 추가
-* JOIN reply 추가
-* 이외 reply 추가되었는지 확인
+* NOTICE reply 확인
 * 채널 삭제 관리
 * 리팩토링
 * 강제종료 후 leak 검사
