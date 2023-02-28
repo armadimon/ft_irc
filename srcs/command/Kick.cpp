@@ -22,6 +22,12 @@ void	cmdKick(Command cmd, int fd)
 	if (c.getUserState() == REGISTER)
 	{
 		channel_name = params[0];
+		if (channel_name.size() > 50)
+		{
+			reply(fd, 476, channel_name);   // ERR_BADCHANMASK 476
+			return;
+		}
+
 		// 채널이 존재하는지 검사
 		if (!cmd.getServer().isExistChannel(channel_name))
 		{

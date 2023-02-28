@@ -54,6 +54,11 @@ void cmdJoin(Command cmd, int fd)
 		std::vector<std::string>::iterator keyIter = channels_passwd.begin();
 		for (size_t i = 0; i < channels_name.size(); i++)
 		{
+			if (channels_name[i].size() > 50 || channels_name[i].find("#") != 0)
+			{
+				reply(fd, 476, channels_name[i]);   // ERR_BADCHANMASK 476
+				return;
+			}
 			std::string key = keyIter < channels_passwd.end() ? *keyIter++ : "";
 			std::map<std::string, Channel *> &tempCh = s.getChannels();
 			std::map<std::string, Channel *>::iterator ChIt = tempCh.find(channels_name[i]);
