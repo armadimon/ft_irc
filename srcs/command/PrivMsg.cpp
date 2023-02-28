@@ -9,8 +9,6 @@ void	cmdPrivMsg(Command cmd, int fd)
 	std::string temp = makePrefix(c);
 	std::vector<int> reciverFD;
 	std::vector<std::string> recivers;
-	
-	std::cout << "check privmsg" << std::endl;
 
 	if (c.getUserState() == REGISTER)
 	{
@@ -31,10 +29,10 @@ void	cmdPrivMsg(Command cmd, int fd)
 			if ((*rIter)[0] == '#')
 			{
 				std::map<std::string, Channel *> tempCh = s.getChannels();
-				if (!s.isExistChannel(*rIter))
-					reply(fd, 403, c.getNickName(), *rIter);
 				if (tempCh.size()  == 0)
 					return ;
+				if (!s.isExistChannel(*rIter))
+					reply(fd, 403, c.getNickName(), *rIter);
 				std::map<int, std::string> tempCli = s.getChannels()[*rIter]->getClientList();
 				std::map<int, std::string>::iterator clientIt = tempCli.begin();
 				while (clientIt != tempCli.end())
