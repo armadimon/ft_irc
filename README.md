@@ -77,10 +77,10 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 
 ### 2월 28일 (화)
 * reply 추가
-* 
+* 자잘한 리팩토링
 
 ### TODO
-* NOTICE reply 확인
+* 연결 끊기는 문제
 * 채널 삭제 관리
 * 리팩토링
 * 강제종료 후 leak 검사
