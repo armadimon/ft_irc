@@ -81,7 +81,7 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 
 ### TODO
 * 연결 끊기는 문제
-* 채널 삭제 관리
+* 채널 삭제 관리 - seg fault
 * 리팩토링
 * 강제종료 후 leak 검사
 * 테스트
