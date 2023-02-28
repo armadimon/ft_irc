@@ -162,6 +162,17 @@ Client &Server::getClient(std::string name)
 	throw std::runtime_error("Error :");
 }
 
+Client *Server::findClient(std::string name)
+{
+	std::map<int, Client *>::iterator it = this->clients.begin();
+	for (; it != clients.end(); it++)
+	{
+		if (name == it->second->getNickName())
+			return it->second;
+	}
+	return nullptr;
+}
+
 std::string	Server::getPass()
 {
 	return(password);
