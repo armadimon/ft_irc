@@ -10,16 +10,18 @@ void	cmdPrivMsg(Command cmd, int fd)
 	std::vector<int> reciverFD;
 	std::vector<std::string> recivers;
 	
+	std::cout << "check privmsg" << std::endl;
+
 	if (c.getUserState() == REGISTER)
 	{
 		if (params[0].empty())
 		{
-			reply(fd, 411, c.getNickName(), NULL); // ERR_NORECIPIENT
+			reply(fd, 411, c.getNickName(), " "); // ERR_NORECIPIENT
 			return;
 		}
 		if (params[1].empty())
 		{
-			reply(fd, 412, c.getNickName(), NULL); // ERR_NOTEXTTOSEND
+			reply(fd, 412, c.getNickName(), " "); // ERR_NOTEXTTOSEND
 			return;
 		}
 		recivers = string_split(params[0], ",");
@@ -29,6 +31,8 @@ void	cmdPrivMsg(Command cmd, int fd)
 			if ((*rIter)[0] == '#')
 			{
 				std::map<std::string, Channel *> tempCh = s.getChannels();
+				if (!s.isExistChannel(*rIter))
+					reply(fd, 403, c.getNickName(), *rIter);
 				if (tempCh.size()  == 0)
 					return ;
 				std::map<int, std::string> tempCli = s.getChannels()[*rIter]->getClientList();
@@ -42,16 +46,11 @@ void	cmdPrivMsg(Command cmd, int fd)
 			}
 			else
 			{
-				std::map<int, Client *> temp_map = s.getClients();
-				std::map<int, Client *>::iterator mapIter = temp_map.begin();
-
-				for(; mapIter != temp_map.end(); mapIter++)
-				{
-					if (mapIter->second->getNickName() == *rIter)
-					{
-						reciverFD.push_back(mapIter->second->getFD());
-					}
-				}
+				Client *tmp_client = s.findClient(*rIter);
+				if (tmp_client != nullptr)
+					reciverFD.push_back(tmp_client->getFD());
+				else
+					reply(fd, 401, c.getNickName(), *rIter);
 			}
 		}
 		std::vector<int>::iterator vecIter = reciverFD.begin();

@@ -15,6 +15,9 @@ void	reply(int fd, int replyNum, std::string cName, std::string msg)
 	case 366:
 		ss << " :End of NAMES list\r\n";
 		break;
+	case 401:
+		ss << " :No such nick\r\n";
+		break;
 	case 403:
 		ss << " :No such channel\r\n";
 		break;
