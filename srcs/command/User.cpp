@@ -19,13 +19,10 @@ void	cmdUser(Command cmd, int fd)
 			c.setRealName(cmd.getTrailing());
 		else if (params[3].size() > 0)
 			c.setRealName(params[3]);
-		std::cout << "User cmd : " << c.getUserName() << std::endl;
-		std::cout << "User cmd : " << c.getHostName() << std::endl;
-		std::cout << "User cmd : " << c.getRealName() << std::endl;
 		c.setUserState(READY);
 	}
 	else if (c.getUserState() == REGISTER)
 	{
-		reply(fd, 462, c.getNickName(), 0);
+		reply(fd, 462, c.getNickName(), "");
 	}
 }

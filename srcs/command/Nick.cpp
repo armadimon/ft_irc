@@ -40,5 +40,4 @@ void	cmdNick(Command cmd, int fd)
 			send(fd, str.c_str(), str.size(), 0);
 		}
 	}
-	std::cout << "nick cmd : " << c.getNickName() << std::endl;
 }

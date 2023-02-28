@@ -23,7 +23,7 @@ void	cmdKick(Command cmd, int fd)
 		channel_name = params[0];
 		if (channel_name.size() > 50)
 		{
-			reply(fd, 476, channel_name);   // ERR_BADCHANMASK 476
+			reply(fd, 476, c.getNickName(), channel_name);   // ERR_BADCHANMASK 476
 			return;
 		}
 
