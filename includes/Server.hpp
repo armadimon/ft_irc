@@ -29,6 +29,7 @@ class Server
 	Client &getClient(std::string name);
 	Client *findClient(std::string name);
 	std::map<int, Client *> getClients();
+	void removeClient(int fd);
 	bool isAlreadyUsed(std::string client_name);
 	std::map<std::string, Channel *> &getChannels();
 	Channel *getChannel(std::string chName);

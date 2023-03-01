@@ -135,7 +135,6 @@ void Server::run()
 				}
 				else
 				{
-					std::cout << "checkcheck" << std::endl;
 					clientRead(clients[i]->getFD());
 					is_set--;
 				}
@@ -183,6 +182,19 @@ Client *Server::findClient(std::string name)
 			return it->second;
 	}
 	return nullptr;
+}
+
+void Server::removeClient(int fd)
+{
+	std::map<int, Client *>::iterator it = this->clients.find(fd);
+	// 모든 채널에서 해당 클라이언트 삭제
+	this->removeClientFromAllChannels(fd);
+	// 서버 목록에서 클라이언트 지우기
+	this->clients.erase(fd);
+	delete (*it).second;
+	close(fd);
+	FD_CLR(fd, &read_fds);
+	FD_CLR(fd, &write_fds);
 }
 
 std::string	Server::getPass()
