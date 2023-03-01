@@ -79,10 +79,12 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 * reply 추가
 * 자잘한 리팩토링
 
+### 3월 1일 (수)
+* 채널 삭제 관리
+
 ### TODO
 * QUIT 명령어 구현
 * 연결 끊기는 문제
-* 채널 삭제 관리 - seg fault
 * 리팩토링
 * 강제종료 후 leak 검사
 * 테스트
