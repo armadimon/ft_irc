@@ -7,7 +7,7 @@ void	cmdUser(Command cmd, int fd)
 	// ERR_ALREADYREGISTRED 462 = username, hostname, realname 전부 저장되있을 때
 	if (c.getUserState() == PWSET || c.getUserState() == READY)
 	{
-		if (params.size() < 4)
+		if (params.size() + cmd.getTrailing().size() < 4)
 		{
 			// ERR_NEEDMOREPARAMS
 			reply(fd, 461, c.getNickName(), cmd.getCmd());
