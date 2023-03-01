@@ -12,6 +12,7 @@ Client::Client(int fd)
 	cmdList["JOIN"] = cmdJoin;
 	cmdList["KICK"] = cmdKick;
 	cmdList["PART"] = cmdPart;
+	cmdList["QUIT"] = cmdQuit;
 }
 
 Client::Client() {}

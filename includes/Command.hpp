@@ -46,6 +46,7 @@ void	cmdNotice(Command cmd, int fd);
 void	cmdJoin(Command cmd, int fd);
 void	cmdKick(Command cmd, int fd);
 void	cmdPart(Command cmd, int fd);
+void	cmdQuit(Command cmd, int fd);
 
 #endif
 
