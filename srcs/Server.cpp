@@ -61,11 +61,12 @@ void Server::doSelect() {
 void	Server::removeClientFromChannel(int client_fd)
 {
 	std::map<std::string, Channel *>::iterator chIter = channels.begin();
-
 	while (chIter != channels.end())
 	{
 		if (chIter->second->isExistClient(clients[client_fd]->getNickName()))
+		{
 			chIter->second->removeClient(client_fd);
+		}
 		if (chIter->second->getClientList().size() == 0)
 		{
 			delete chIter->second;
@@ -83,7 +84,11 @@ void Server::clientRead(int client_fd)
 	char* bufRead = this->getClient(client_fd).getBuf();
 
   	r = recv(client_fd, bufRead, 1024, 0);
-	std::cout << bufRead << std::endl;
+	std::cout << "error no : " << errno << std::endl;
+	std::cout << "r : " << r << std::endl;
+	if ( errno == EAGAIN )
+		return ;
+	std::cout << "bufRead : " << bufRead << std::endl;
   	if (r <= 0)
     {
 		FD_CLR(client_fd, &read_fds);
@@ -115,6 +120,13 @@ void Server::run()
 		int i = 0;
 		while (i < fd_max + 1 && is_set > 0)
 		{
+			// std::cout << double(end - start) << std::endl;
+			// if (i > fd && double(end - start) > 60)
+			// {
+			// 	send(i, "PING :ircserv\r\n", strlen("PING :ircserv\r\n"), 0);
+			// 	start = time(NULL);
+			// 	end = time(NULL);
+			// }
 			if (FD_ISSET(i, &cpy_read_fds))
 			{
 				if (i == this->fd)

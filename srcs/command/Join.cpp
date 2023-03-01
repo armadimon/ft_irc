@@ -73,6 +73,11 @@ void cmdJoin(Command cmd, int fd)
 				reply(fd, 405, c.getNickName(), channels_name[i]);
 				continue;
 			}
+			if (channels_name[i].size() > 0 && channels_name[i][0] != '#')
+			{
+				reply(fd, 476, c.getNickName(), channels_name[i]);
+				continue;
+			}
 			if (ChIt != tempCh.end())
 			{
 				if (s.getChannel(channels_name[i])->getPassword() != key)
