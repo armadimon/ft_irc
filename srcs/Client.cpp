@@ -12,6 +12,7 @@ Client::Client(int fd)
 	cmdList["JOIN"] = cmdJoin;
 	cmdList["KICK"] = cmdKick;
 	cmdList["PART"] = cmdPart;
+	cmdList["QUIT"] = cmdQuit;
 }
 
 Client::Client() {}
@@ -78,7 +79,7 @@ void	Client::registerClient()
 		this->realName.size() > 0 )
 	{
 		userState = REGISTER;
-		std::string str = ":wellcome to IRC\r\n";
+		std::string str = ":welcome to IRC\r\n";
 		reply(fd, 372, nickName, str);
 	}
 }

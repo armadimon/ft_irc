@@ -6,7 +6,7 @@ Channel::Channel(std::string n, int user_fd) : name(n), passwd(""), oper_fd(user
 
 Channel::Channel(std::string n, std::string key, int user_fd) : name(n), passwd(key), oper_fd(user_fd), client_list() {}
 
-Channel::~Channel() {}
+Channel::~Channel() { std::cout << this->getChannelName() << " destroyed" << std::endl; }
 
 std::string Channel::getChannelName()
 {

@@ -58,7 +58,7 @@ void cmdJoin(Command cmd, int fd)
 		{
 			if (channels_name[i].size() > 50 || channels_name[i].find("#") != 0)
 			{
-				reply(fd, 476, c.getNickName() ,channels_name[i]);   // ERR_BADCHANMASK 476
+				reply(fd, 476, c.getNickName(), channels_name[i]);   // ERR_BADCHANMASK 476
 				return;
 			}
 			std::string key = keyIter < channels_passwd.end() ? *keyIter++ : "";

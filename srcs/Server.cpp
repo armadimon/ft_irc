@@ -58,7 +58,18 @@ void Server::doSelect() {
 		throw std::runtime_error("Error: select");
 }
 
-void	Server::removeClientFromChannel(int client_fd)
+void	Server::removeClientFromChannel(Channel *channel, int client_fd)
+{
+	if (channel->isExistClient(clients[client_fd]->getNickName()))
+		channel->removeClient(client_fd);
+	if (channel->getClientList().size() == 0)
+	{
+		delete channel;
+		channels.erase(channel->getChannelName());
+	}
+}
+
+void	Server::removeClientFromAllChannels(int client_fd)
 {
 	std::map<std::string, Channel *>::iterator chIter = channels.begin();
 	while (chIter != channels.end())
@@ -94,7 +105,7 @@ void Server::clientRead(int client_fd)
 		FD_CLR(client_fd, &read_fds);
 		FD_CLR(client_fd, &write_fds);
     	close(client_fd);
-		removeClientFromChannel(client_fd);
+		removeClientFromAllChannels(client_fd);
 		std::map<int, Client *>::iterator mapIter = clients.find(client_fd);
 		if (mapIter != clients.end())
 		{
@@ -172,6 +183,30 @@ Client &Server::getClient(std::string name)
 			return *(it->second);
 	}
 	throw std::runtime_error("Error :");
+}
+
+Client *Server::findClient(std::string name)
+{
+	std::map<int, Client *>::iterator it = this->clients.begin();
+	for (; it != clients.end(); it++)
+	{
+		if (name == it->second->getNickName())
+			return it->second;
+	}
+	return nullptr;
+}
+
+void Server::removeClient(int fd)
+{
+	std::map<int, Client *>::iterator it = this->clients.find(fd);
+	// 모든 채널에서 해당 클라이언트 삭제
+	this->removeClientFromAllChannels(fd);
+	// 서버 목록에서 클라이언트 지우기
+	this->clients.erase(fd);
+	delete (*it).second;
+	close(fd);
+	FD_CLR(fd, &read_fds);
+	FD_CLR(fd, &write_fds);
 }
 
 std::string	Server::getPass()

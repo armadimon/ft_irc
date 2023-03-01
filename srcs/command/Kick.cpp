@@ -62,7 +62,6 @@ void	cmdKick(Command cmd, int fd)
 		std::vector<std::string>::iterator it = user_names.begin();
 		for (; it != user_names.end(); it++)
 		{
-			std::cout << "user : " << *it << std::endl;
 			Client& client = cmd.getServer().getClient(*it);
 			std::string	prefix = ":";
 			prefix += c.getNickName();
@@ -92,34 +91,10 @@ void	cmdKick(Command cmd, int fd)
 			std::cout << msg << std::endl;
 			broadcast(cmd.getServer().getChannels(), channel_name, msg);
 	
-			std::map<int, std::string> clientlist = chan->getClientList();
-			std::map<int, std::string>::iterator clist_it = clientlist.begin();
-			std::cout << "[before client list]" << std::endl;
-			for (; clist_it != clientlist.end(); clist_it++)
-				std::cout << (*clist_it).second << std::endl;
-			// 해당 클라이언트를 채널 리스트에서 삭제
-			chan->removeClient(client.getFD());
-			std::map<int, std::string> clientlist2 = chan->getClientList();
-			std::map<int, std::string>::iterator clist_it2 = clientlist2.begin();
-			std::cout << "[after client list]" << std::endl;
-			for (; clist_it2 != clientlist2.end(); clist_it2++)
-				std::cout << (*clist_it2).second << std::endl;
-
-			std::vector<std::string> chanlist = c.getmyChannelList();
-			std::vector<std::string>::iterator list_it = chanlist.begin();
-			std::cout << "[before channel list]" << std::endl;
-			for (; list_it < chanlist.end(); list_it++)
-				std::cout << *list_it << std::endl;
 			// 클라이언트의 myChannelList에서 해당 채널을 삭제.
 			client.removeChannelFromList(channel_name);
-			std::vector<std::string> chanlist2 = c.getmyChannelList();
-			std::vector<std::string>::iterator list_it2 = chanlist2.begin();
-			std::cout << "[after channel list]" << std::endl;
-			for (; list_it2 < chanlist2.end(); list_it2++)
-				std::cout << *list_it2 << std::endl;
-
-			// 삭제하려는 클라이언트가 operator여도 그대로 삭제함! 채널은 남아있음.
+			// 해당 클라이언트를 채널 리스트에서 삭제
+			cmd.getServer().removeClientFromChannel(chan, client.getFD());
 		}
-		// 채널에 해당 유저가 채널에서 kick당했다고 날리기
 	}
 }

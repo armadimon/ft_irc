@@ -48,9 +48,9 @@ void	cmdPart(Command cmd, int fd)
 				msg += (*it);
 			msg += "\r\n";
 			broadcast(cmd.getServer().getChannels(), *it, msg);
-			chan->removeClient(c.getFD());
 			// 클라이언트의 myChannelList에서 해당 채널을 삭제.
 			c.removeChannelFromList(*it);		
+			cmd.getServer().removeClientFromChannel(chan, c.getFD());
 		}
 	}
 }
