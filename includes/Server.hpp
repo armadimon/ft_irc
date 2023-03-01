@@ -44,7 +44,8 @@ class Server
 	void doSelect();
 	void acceptClient();
 	void run();
-	void removeClientFromChannel(int client_fd);
+	void removeClientFromChannel(Channel *channel, int client_fd);
+	void removeClientFromAllChannels(int client_fd);
 	bool isExistChannel(std::string channel_name);
 
   private:
