@@ -23,8 +23,6 @@ void	cmdNick(Command cmd, int fd)
 	}
 	if (c.getUserState() == PWSET || c.getUserState() == READY)
 	{
-		std::string str = makePrefix(c) + cmd.getCmd() + " " + params[0] + "\r\n";
-		c.setSendBuf(str);
 		c.setNickName(params[0]);
 		c.setUserState(READY);
 	}

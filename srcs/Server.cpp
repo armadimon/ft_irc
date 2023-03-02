@@ -180,7 +180,6 @@ void Server::run()
 			{
 				if (i != this->fd)
 				{
-					// std::cout << clients[i]->getMsgBuf() << std::endl;
 					clientWrite(i);
 					is_set--;
 				}
@@ -194,7 +193,7 @@ void Server::run()
 				}
 				else
 				{
-					clientRead(clients.find(i)->second->getFD());
+					clientRead(i);
 					is_set--;
 				}
 			}

@@ -14,7 +14,8 @@ void	cmdUser(Command cmd, int fd)
 			return;
 		}
 		c.setUserName(params[0]);
-		// c.setHostName(params[1]);
+		if (params[1] != "0")
+			c.setHostName(params[1]);
 		if (cmd.getTrailing().size() > 0)
 			c.setRealName(cmd.getTrailing());
 		else if (params[3].size() > 0)
