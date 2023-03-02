@@ -188,7 +188,7 @@ void Server::run()
 				}
 				else
 				{
-					clientRead(clients.find(i)->second->getFD());
+					clientRead(i);
 					is_set--;
 				}
 			}
