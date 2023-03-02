@@ -7,11 +7,11 @@ Command::Command(std::string msg, Server *server)
 {
 	std::cout << msg << std::endl;
 	std::vector<std::string> strList;
+
 	if (msg.empty())
 		return ;
 	if (msg.find_first_of(":") != std::string::npos)
 	{
-		std::cout << "check 1" << std::endl;
 		std::string trailing = msg.substr(msg.find_first_of(":"));
 		std::string rStr = msg.substr(0, msg.find_first_of(":"));
 		strList = string_split(rStr, " "); 
@@ -22,6 +22,7 @@ Command::Command(std::string msg, Server *server)
 	}
 	else
 		strList = string_split(msg, " ");
+
 	std::vector<std::string>::iterator strIter = strList.begin();
 	for (; strIter < strList.end(); strIter++)
 	{

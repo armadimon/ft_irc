@@ -21,8 +21,10 @@ void	cmdNick(Command cmd, int fd)
 		reply(fd, 433, c.getNickName(), params[0]);
 		return;
 	}
-	if (c.getUserState() == PWSET)
+	if (c.getUserState() == PWSET || c.getUserState() == READY)
 	{
+		std::string str = makePrefix(c) + cmd.getCmd() + " " + params[0] + "\r\n";
+		send(fd, str.c_str(), str.size(), 0);
 		c.setNickName(params[0]);
 		c.setUserState(READY);
 	}

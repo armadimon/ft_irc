@@ -80,7 +80,7 @@ void	Client::registerClient()
 	{
 		userState = REGISTER;
 		std::string str = ":welcome to IRC\r\n";
-		reply(fd, 372, nickName, str);
+		reply(fd, 001, nickName, str);
 	}
 }
 
@@ -101,6 +101,11 @@ int	Client::addmyChannelList(std::string channel_name)
 char	*Client::getBuf()
 {
 	return (this->bufRead);
+}
+
+void	Client::clearBuf()
+{
+	memset(this->bufRead, 0, 4095);
 }
 
 int		Client::getFD()

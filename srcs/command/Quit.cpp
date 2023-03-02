@@ -6,7 +6,7 @@ void	cmdQuit(Command cmd, int fd)
 	std::string message;
 	if (cmd.getTrailing().size() > 0)
 		message = cmd.getTrailing();
-	else
+	else if (cmd.getParams().size() > 0)
 		message = cmd.getParams()[0];
 
 	Server &s = cmd.getServer();

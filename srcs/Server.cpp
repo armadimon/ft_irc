@@ -16,12 +16,15 @@ void Server::acceptClient()
 	int					new_socket;
 	struct sockaddr_in	new_socket_in;
 	socklen_t			new_socket_len;
+	char 				host_str[INET_ADDRSTRLEN];
 
 	new_socket_len = sizeof(new_socket_in);
 	new_socket = accept(this->fd, (struct sockaddr *)&new_socket_in, &new_socket_len);
+	inet_ntop(AF_INET, &new_socket_in.sin_addr, host_str, INET_ADDRSTRLEN);
 	if (new_socket == -1)
 		throw std::runtime_error("Error: accept");
 	clients[new_socket] = new Client(new_socket);
+	clients[new_socket]->setHostName(host_str);
 	std::cout << "Client #" << new_socket << " is Connected!" << std::endl;
 	if (new_socket > fd_max)
 		fd_max = new_socket;
@@ -38,7 +41,7 @@ void Server::createSocket()
 	if (pe == NULL)
 		throw std::runtime_error("Error: getprotobyname");
 	socket_in.sin_family = AF_INET;
-	socket_in.sin_addr.s_addr = INADDR_ANY;
+	socket_in.sin_addr.s_addr = htonl(INADDR_ANY);
 	socket_in.sin_port = htons(this->port);
 	fd = socket(PF_INET, SOCK_STREAM, pe->p_proto);
 	if (fd == -1)
@@ -46,14 +49,15 @@ void Server::createSocket()
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	if (bind(fd, (struct sockaddr*)&socket_in, sizeof(socket_in)) == -1)
 		throw std::runtime_error("Error: bind");
-	if (listen(fd, 42) == -1)
+	if (listen(fd, 5) == -1)
 		throw std::runtime_error("Error: listen");
 	FD_SET(fd, &read_fds);
 	fd_max = fd;
 }
 
 void Server::doSelect() {
-	is_set = select(fd_max + 2, &cpy_read_fds, &cpy_write_fds, NULL, NULL);
+	is_set = select(fd_max + 1, &cpy_read_fds, &cpy_write_fds, NULL, NULL);
+	// std::cout << is_set << std::endl;
 	if (is_set == -1)
 		throw std::runtime_error("Error: select");
 }
@@ -92,14 +96,57 @@ void	Server::removeClientFromAllChannels(int client_fd)
 void Server::clientRead(int client_fd)
 {
 	int	r;
-	char* bufRead = this->getClient(client_fd).getBuf();
+	char bufRead[513];
 
-  	r = recv(client_fd, bufRead, 1024, 0);
+  	r = recv(client_fd, bufRead, 512, 0);
+	// std::cout << "client fd : " << client_fd << std::endl;
+	// std::cout << "error no : " << errno << std::endl;
+	// std::cout << "r : " << r << std::endl;
+	if ( errno == EAGAIN )
+	{
+		errno = 0;
+		return ;
+	}
+	// std::cout << "bufRead : " << bufRead << std::endl;
+  	if (r < 0)
+    {
+		FD_CLR(client_fd, &read_fds);
+		FD_CLR(client_fd, &write_fds);
+    	close(client_fd);
+		removeClientFromAllChannels(client_fd);
+		std::map<int, Client *>::iterator mapIter = clients.find(client_fd);
+		if (mapIter != clients.end())
+		{
+			delete clients[client_fd];
+			clients.erase(mapIter);
+		}
+    	printf("client #%d gone away\n", client_fd);
+		return ;
+    }
+	else
+	{
+		bufRead[r] = '\0';
+		// std::string tempStr(bufRead);
+		// this->getClient(client_fd).clearBuf();
+		this->clients[client_fd]->parseMSG(this, bufRead);
+	}
+}
+
+void Server::clientWrite(int client_fd)
+{
+	int	r;
+	std::string msg = this->getClient(client_fd).msg;
+	if (msg.length() <= 0)
+		return ;
+	std::cout << "msg length : " << msg.length() << std::endl;
+  	r = send(client_fd, msg.c_str(), msg.length(), 0);
 	std::cout << "error no : " << errno << std::endl;
 	std::cout << "r : " << r << std::endl;
 	if ( errno == EAGAIN )
+	{
+		errno = 0;
 		return ;
-	std::cout << "bufRead : " << bufRead << std::endl;
+	}
   	if (r <= 0)
     {
 		FD_CLR(client_fd, &read_fds);
@@ -115,9 +162,7 @@ void Server::clientRead(int client_fd)
     	printf("client #%d gone away\n", client_fd);
 		return ;
     }
-	std::string tempStr(bufRead);
-	memset(bufRead, 0, 4096);
-	this->clients[client_fd]->parseMSG(this, tempStr);
+	this->getClient(client_fd).msg.clear();
 }
 
 void Server::run()
@@ -125,19 +170,19 @@ void Server::run()
 	createSocket();
 	while (true)
 	{
+		FD_ZERO(&cpy_read_fds);
+		FD_ZERO(&cpy_write_fds);
 		cpy_read_fds = read_fds;
 		cpy_write_fds = write_fds;
 		doSelect();
 		int i = 0;
 		while (i < fd_max + 1 && is_set > 0)
 		{
-			// std::cout << double(end - start) << std::endl;
-			// if (i > fd && double(end - start) > 60)
-			// {
-			// 	send(i, "PING :ircserv\r\n", strlen("PING :ircserv\r\n"), 0);
-			// 	start = time(NULL);
-			// 	end = time(NULL);
-			// }
+			if (FD_ISSET(i, &cpy_write_fds))
+			{
+				clientWrite(i);
+				is_set--;
+			}
 			if (FD_ISSET(i, &cpy_read_fds))
 			{
 				if (i == this->fd)
@@ -147,7 +192,7 @@ void Server::run()
 				}
 				else
 				{
-					clientRead(clients[i]->getFD());
+					clientRead(clients.find(i)->second->getFD());
 					is_set--;
 				}
 			}

@@ -10,6 +10,8 @@ void	reply(int fd, int replyNum, std::string cName, std::string msg)
 	std::cout << "[" << msg << "]" << std::endl;
 	switch (replyNum)
 	{
+	case 001:
+		break;
 	case 353:
 		break;
 	case 366:
