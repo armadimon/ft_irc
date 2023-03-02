@@ -5,7 +5,6 @@ Command::Command() {}
 Command::Command(std::string msg, Server *server)
 : server(server)
 {
-	std::cout << msg << std::endl;
 	std::vector<std::string> strList;
 
 	if (msg.empty())
