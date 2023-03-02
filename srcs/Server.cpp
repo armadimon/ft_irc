@@ -135,17 +135,10 @@ void Server::clientRead(int client_fd)
 void Server::clientWrite(int client_fd)
 {
 	int	r;
-	std::string msg = this->getClient(client_fd).msg;
-	// std::cout << "length : " << msg.length() << std::endl;
-	// std::cout << "size : " << msg.size() << std::endl;
-	std::cout << "write address : " << &msg << std::endl;
-	std::cout << "write size : " << msg.size() << std::endl;
-	std::cout << "msg length : " << msg.length() << std::endl;
+	std::string msg = this->getClient(client_fd).getMsgBuf();
 	if (msg.length() <= 0)
 		return ;
   	r = send(client_fd, msg.c_str(), msg.length(), 0);
-	std::cout << "error no : " << errno << std::endl;
-	std::cout << "r : " << r << std::endl;
 	if ( errno == EAGAIN )
 	{
 		errno = 0;
@@ -166,12 +159,13 @@ void Server::clientWrite(int client_fd)
     	printf("client #%d gone away\n", client_fd);
 		return ;
     }
-	this->getClient(client_fd).msg.clear();
+	this->getClient(client_fd).getMsgBuf().clear();
 }
 
 void Server::run()
 {
 	createSocket();
+	std::cout << "serveraddress : " << this << std::endl;
 	while (true)
 	{
 		FD_ZERO(&cpy_read_fds);
@@ -186,6 +180,7 @@ void Server::run()
 			{
 				if (i != this->fd)
 				{
+					// std::cout << clients[i]->getMsgBuf() << std::endl;
 					clientWrite(i);
 					is_set--;
 				}

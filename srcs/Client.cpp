@@ -1,7 +1,7 @@
 #include "../includes/Client.hpp"
 
 Client::Client(int fd)
-	:fd(fd), userState(DEFAULT)
+	: fd(fd),sendBuf(""),userState(DEFAULT)
 {
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	cmdList["PASS"] = cmdPass;
@@ -113,6 +113,11 @@ int		Client::getFD()
 	return (this->fd);
 }
 
+std::string	Client::getMsgBuf()
+{
+	return (this->sendBuf);
+}
+
 std::string Client::getUserName()
 {
 	return (this->userName);
@@ -138,6 +143,11 @@ State		Client::getUserState()
 std::vector<std::string>	Client::getmyChannelList()
 {
 	return (this->myChannelList);
+}
+
+void Client::setMsgBuf(std::string str)
+{
+	sendBuf = str;
 }
 
 void Client::setUserName(std::string str)
