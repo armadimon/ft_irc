@@ -1,5 +1,6 @@
 #include "../../includes/Command.hpp"
 
+// PRIVMSG <receiver>{,<receiver>} <text to be sent>
 void	cmdPrivMsg(Command cmd, int fd)
 {
 	std::vector<std::string> params = cmd.getParams();

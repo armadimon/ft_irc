@@ -1,5 +1,6 @@
 #include "../../includes/Command.hpp"
 
+// USER <username> <hostname> <servername> <realname>
 void	cmdUser(Command cmd, int fd)
 {
 	std::vector<std::string> params = cmd.getParams();

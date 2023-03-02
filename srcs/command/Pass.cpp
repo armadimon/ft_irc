@@ -1,5 +1,6 @@
 #include "../../includes/Command.hpp"
 
+// PASS <password>
 void	cmdPass(Command cmd, int fd)
 {
 	std::vector<std::string> params = cmd.getParams();
