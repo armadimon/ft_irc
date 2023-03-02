@@ -64,13 +64,7 @@ void	cmdKick(Command cmd, int fd)
 		for (; it != user_names.end(); it++)
 		{
 			Client& client = cmd.getServer().getClient(*it);
-			std::string	prefix = ":";
-			prefix += c.getNickName();
-			prefix += "!";
-			prefix += c.getUserName();
-			prefix += "@";
-			prefix += c.getHostName();
-			prefix += " ";
+			std::string	prefix = makePrefix(c);
 
 			std::string msg = "";
 			msg += prefix;
