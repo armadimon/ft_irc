@@ -35,9 +35,13 @@ void	cmdNick(Command cmd, int fd)
 		}
 		else
 		{
+			std::vector<std::string> channel_list = c.getmyChannelList();
 			std::string str = makePrefix(c) + cmd.getCmd() + " " + params[0] + "\r\n";
 			c.setNickName(params[0]);
 			c.setSendBuf(str);
+			std::vector<std::string>::iterator it = channel_list.begin();
+			for (; it != channel_list.end(); it++)
+				broadcast(s.getChannels(), *it, str, s);
 		}
 	}
 }
