@@ -25,7 +25,7 @@ void Server::acceptClient()
 		throw std::runtime_error("Error: accept");
 	clients[new_socket] = new Client(new_socket);
 	clients[new_socket]->setHostName(host_str);
-	std::cout << "Client #" << new_socket << " is Connected!" << std::endl;
+	std::cout << "Client number #" << new_socket  << ":" << host_str << " is Connected!" << std::endl;
 	if (new_socket > fd_max)
 		fd_max = new_socket;
 	FD_SET(new_socket, &read_fds);
