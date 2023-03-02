@@ -55,7 +55,7 @@ void	cmdKick(Command cmd, int fd)
 		{
 			// 유저가 없으면 ERR_NOTONCHANNEL
 			if (!chan->isExistClient(tmp_users[i]))
-				c.setSendBuf(reply(441, c.getNickName(), tmp_users[i] + " " + tmp_users[i] + " " + channel_name));
+				c.setSendBuf(reply(441, c.getNickName(), tmp_users[i] + " " + channel_name));
 			else
 				user_names.push_back(tmp_users[i]);
 		}

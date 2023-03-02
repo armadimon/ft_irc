@@ -19,7 +19,7 @@ void	cmdQuit(Command cmd, int fd)
 
 	// 서버에 메시지 보내기
 	std::cout << "quit" << std::endl;
-	c.setMsgBuf(c.getMsgBuf() + "ERROR :Closing link: (" + c.getNickName() + "@" + c.getHostName() + ")[Quit: " + message + "]\r\n");
-	std::cout << c.getMsgBuf() << std::endl;
+	c.setSendBuf(c.getSendBuf() + "ERROR :Closing link: (" + c.getNickName() + "@" + c.getHostName() + ")[Quit: " + message + "]\r\n");
+	//std::cout << c.getMsgBuf() << std::endl;
 	c.setUserState(LOGOFF);
 }
