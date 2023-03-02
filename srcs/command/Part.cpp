@@ -5,7 +5,8 @@ void	cmdPart(Command cmd, int fd)
 {
 	std::vector<std::string> params = cmd.getParams();
 	std::string comment;
-	Client &c = cmd.getServer().getClient(fd);
+	Server &s = cmd.getServer();
+	Client &c = s.getClient(fd);
 	std::vector<std::string> tmp_channels;
 	std::vector<std::string> channel_names;
 
@@ -13,7 +14,7 @@ void	cmdPart(Command cmd, int fd)
 	{
 		if (params.size() < 1)
 		{
-			reply(fd, 461, c.getNickName(), cmd.getCmd());
+			c.setSendBuf(reply(461, c.getNickName(), cmd.getCmd()));
 			return;
 		}
 		if (params.size() == 2)	comment = params[1];
@@ -21,8 +22,8 @@ void	cmdPart(Command cmd, int fd)
 		tmp_channels = string_split(params[0], ",");
 		for (size_t i = 0; i < tmp_channels.size(); i++)
 		{
-			if (!cmd.getServer().isExistChannel(tmp_channels[i]))
-				reply(fd, 403, c.getNickName(), tmp_channels[i]);  // ERR_NOSUCHCHANNEL
+			if (!s.isExistChannel(tmp_channels[i]))
+				c.setSendBuf(reply(403, c.getNickName(), tmp_channels[i]));  // ERR_NOSUCHCHANNEL
 			else
 				channel_names.push_back(tmp_channels[i]);
 		}
@@ -30,11 +31,11 @@ void	cmdPart(Command cmd, int fd)
 		std::vector<std::string>::iterator it = channel_names.begin();
 		for (; it < channel_names.end(); it++)
 		{
-			Channel *chan = cmd.getServer().getChannel(*it);
+			Channel *chan = s.getChannel(*it);
 
 			if (!chan->isExistClient(c.getNickName()))
 			{
-				reply(fd, 442, c.getNickName(), *it);
+				c.setSendBuf(reply(442, c.getNickName(), *it));
 				continue;
 			}
 			
@@ -47,10 +48,10 @@ void	cmdPart(Command cmd, int fd)
 			else
 				msg += (*it);
 			msg += "\r\n";
-			broadcast(cmd.getServer().getChannels(), *it, msg);
+			broadcast(s.getChannels(), *it, msg, s);
 			// 클라이언트의 myChannelList에서 해당 채널을 삭제.
 			c.removeChannelFromList(*it);		
-			cmd.getServer().removeClientFromChannel(chan, c.getFD());
+			s.removeClientFromChannel(chan, c.getFD());
 		}
 	}
 }

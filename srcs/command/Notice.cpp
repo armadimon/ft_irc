@@ -14,12 +14,12 @@ void	cmdNotice(Command cmd, int fd)
 	{
 		if (params[0].empty())
 		{
-			reply(fd, 411, c.getNickName(), ""); // ERR_NORECIPIENT
+			c.setSendBuf(reply(411, c.getNickName(), ""));  // ERR_NORECIPIENT
 			return;
 		}
 		if (params[1].empty())
 		{
-			reply(fd, 412, c.getNickName(), ""); // ERR_NOTEXTTOSEND
+			c.setSendBuf(reply(412, c.getNickName(), "")); // ERR_NOTEXTTOSEND
 			return;
 		}
 		recivers = string_split(params[0], ",");
@@ -30,7 +30,7 @@ void	cmdNotice(Command cmd, int fd)
 			{
 				std::map<std::string, Channel *> tempCh = s.getChannels();
 				if (!s.isExistChannel(*rIter))
-					reply(fd, 403, c.getNickName(), *rIter);
+					c.setSendBuf(reply(403, c.getNickName(), *rIter));
 				if (tempCh.size()  == 0)
 					return ;
 				std::map<int, std::string> tempCli = s.getChannels()[*rIter]->getClientList();
@@ -48,7 +48,7 @@ void	cmdNotice(Command cmd, int fd)
 				if (tmp_client != nullptr)
 					reciverFD.push_back(tmp_client->getFD());
 				else
-					reply(fd, 401, c.getNickName(), *rIter);
+					c.setSendBuf(reply(401, c.getNickName(), *rIter));
 			}
 		}
 		std::vector<int>::iterator vecIter = reciverFD.begin();
@@ -60,7 +60,7 @@ void	cmdNotice(Command cmd, int fd)
 			else
 				temp += cmd.getTrailing();
 			temp += "\r\n";
-			send(*vecIter, temp.c_str(), temp.size(), 0);
+			s.getClient(*vecIter).setSendBuf(temp);
 		}
 	}
 }

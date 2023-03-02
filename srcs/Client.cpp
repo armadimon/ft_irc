@@ -9,10 +9,10 @@ Client::Client(int fd)
 	cmdList["NICK"] = cmdNick;
 	cmdList["PRIVMSG"] = cmdPrivMsg;
 	cmdList["JOIN"] = cmdJoin;
-	// cmdList["NOTICE"] = cmdNotice;
-	// cmdList["KICK"] = cmdKick;
-	// cmdList["PART"] = cmdPart;
-	// cmdList["QUIT"] = cmdQuit;
+	cmdList["NOTICE"] = cmdNotice;
+	cmdList["KICK"] = cmdKick;
+	cmdList["PART"] = cmdPart;
+	cmdList["QUIT"] = cmdQuit;
 }
 
 Client::Client() {}
