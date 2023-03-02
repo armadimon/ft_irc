@@ -12,7 +12,7 @@ void	cmdPass(Command cmd, int fd)
 		if (params.size() < 1)
 		{
 			// ERR_NEEDMOREPARAMS 461
-			reply(fd, 461, c.getNickName(), cmd.getCmd());
+			c.setSendBuf(reply(461, c.getNickName(), cmd.getCmd()));
 			return;
 		}
 		for (; it < cmd.getParams().end(); it++)
@@ -28,7 +28,7 @@ void	cmdPass(Command cmd, int fd)
 	else if (c.getUserState() == REGISTER)
 	{
 		// ERR_ALREADYREGISTRED 462
-		reply(fd, 462, c.getNickName(), cmd.getCmd());
+		c.setSendBuf(reply(462, c.getNickName(), cmd.getCmd()));
 		return;
 	}
 }

@@ -37,7 +37,7 @@ const std::string &trim(std::string &s, std::string delimiter)
 	return ltrim(rtrim(s, delimiter), delimiter);
 }
 
-void broadcast(std::map<std::string, Channel *> tempCh, std::string chName, std::string msg)
+void broadcast(std::map<std::string, Channel *> tempCh, std::string chName, std::string msg, Server &s)
 {
 	std::map<int, std::string> tempClient = tempCh[chName]->getClientList();
 	std::map<int, std::string>::iterator clientIter = tempClient.begin();
@@ -45,10 +45,9 @@ void broadcast(std::map<std::string, Channel *> tempCh, std::string chName, std:
 	clientIter = tempClient.begin();
 	for (;clientIter != tempClient.end(); clientIter++)
 	{
-		int	cFd = clientIter->first;
-		send(cFd, msg.c_str(), msg.size(), 0);
+		s.getClient(clientIter->first).setSendBuf(msg);
 		// 요청한 클라이언트에게만 reply
-	} 
+	}
 }
 
 std::string	makePrefix(Client &c)

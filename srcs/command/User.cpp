@@ -10,7 +10,7 @@ void	cmdUser(Command cmd, int fd)
 		if (params.size() + cmd.getTrailing().size() < 4)
 		{
 			// ERR_NEEDMOREPARAMS
-			reply(fd, 461, c.getNickName(), cmd.getCmd());
+			c.setSendBuf(reply(461, c.getNickName(), cmd.getCmd()));
 			return;
 		}
 		c.setUserName(params[0]);
@@ -23,6 +23,6 @@ void	cmdUser(Command cmd, int fd)
 	}
 	else if (c.getUserState() == REGISTER)
 	{
-		reply(fd, 462, c.getNickName(), "");
+		c.setSendBuf(reply(462, c.getNickName(), cmd.getCmd()));
 	}
 }

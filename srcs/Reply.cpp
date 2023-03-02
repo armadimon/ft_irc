@@ -1,7 +1,7 @@
 #include "../includes/Utils.hpp"
 #include "../includes/Server.hpp"
 
-void	reply(int fd, int replyNum, std::string cName, std::string msg)
+std::string	reply(int replyNum, std::string cName, std::string msg)
 {
 	std::stringstream ss;
 
@@ -74,5 +74,5 @@ void	reply(int fd, int replyNum, std::string cName, std::string msg)
 		break;
 	}
 	std::cout << "reply : [" << ss.str() << "]" << std::endl;
-	send(fd, ss.str().c_str(),ss.str().size(), 0);
+	return (ss.str());
 }

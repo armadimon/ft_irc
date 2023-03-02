@@ -8,11 +8,11 @@ Client::Client(int fd)
 	cmdList["USER"] = cmdUser;
 	cmdList["NICK"] = cmdNick;
 	cmdList["PRIVMSG"] = cmdPrivMsg;
-	cmdList["NOTICE"] = cmdNotice;
 	cmdList["JOIN"] = cmdJoin;
-	cmdList["KICK"] = cmdKick;
-	cmdList["PART"] = cmdPart;
-	cmdList["QUIT"] = cmdQuit;
+	// cmdList["NOTICE"] = cmdNotice;
+	// cmdList["KICK"] = cmdKick;
+	// cmdList["PART"] = cmdPart;
+	// cmdList["QUIT"] = cmdQuit;
 }
 
 Client::Client() {}
@@ -80,7 +80,7 @@ void	Client::registerClient()
 	{
 		userState = REGISTER;
 		std::string str = ":welcome to IRC\r\n";
-		reply(fd, 001, nickName, str);
+		sendBuf += reply(001, nickName, str);
 	}
 }
 
@@ -113,7 +113,7 @@ int		Client::getFD()
 	return (this->fd);
 }
 
-std::string	Client::getMsgBuf()
+std::string	Client::getSendBuf()
 {
 	return (this->sendBuf);
 }
@@ -145,9 +145,9 @@ std::vector<std::string>	Client::getmyChannelList()
 	return (this->myChannelList);
 }
 
-void Client::setMsgBuf(std::string str)
+void Client::setSendBuf(std::string str)
 {
-	sendBuf = str;
+	sendBuf += str;
 }
 
 void Client::setUserName(std::string str)
@@ -173,6 +173,11 @@ void Client::setRealName(std::string str)
 void Client::setUserState(State state)
 {
 	userState = state;
+}
+
+void	Client::clearSendBuf()
+{
+	sendBuf.clear();
 }
 
 void	Client::removeChannelFromList(std::string channel_name)

@@ -135,7 +135,7 @@ void Server::clientRead(int client_fd)
 void Server::clientWrite(int client_fd)
 {
 	int	r;
-	std::string msg = this->getClient(client_fd).getMsgBuf();
+	std::string msg = this->getClient(client_fd).getSendBuf();
 	if (msg.length() <= 0)
 		return ;
   	r = send(client_fd, msg.c_str(), msg.length(), 0);
@@ -159,7 +159,7 @@ void Server::clientWrite(int client_fd)
     	printf("client #%d gone away\n", client_fd);
 		return ;
     }
-	this->getClient(client_fd).getMsgBuf().clear();
+	this->getClient(client_fd).clearSendBuf();
 }
 
 void Server::run()

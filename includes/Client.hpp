@@ -43,14 +43,15 @@ class Client
 		void						setUserName(std::string str);
 		void						setHostName(std::string str);
 		void						setUserState(State state);
-		void						setMsgBuf(std::string str);
-		std::string					getMsgBuf();
+		void						setSendBuf(std::string str);
+		std::string					getSendBuf();
 		std::string					getUserName();
 		std::string 				getNickName();
 		std::string 				getHostName();
 		std::string 				getRealName();
 		State						getUserState();
 		void						clearBuf();
+		void						clearSendBuf();
         std::vector<std::string>	getmyChannelList();
 		int							addmyChannelList(std::string channel_name);
 		void						removeChannelFromList(std::string channel_name);
