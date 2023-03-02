@@ -103,7 +103,6 @@ void cmdJoin(Command cmd, int fd)
 			std::string	prefix = makePrefix(c);
 			std::string msg = "";
 			msg += prefix + "JOIN :" + channels_name[i] + "\r\n";
-			std::cout << "msg : [" << msg <<  "]" << std::endl;
 			broadcast(tempCh, channels_name[i], msg, s);
 			nameReply = attachClientList(tempCh, channels_name[i], nameReply);
 			c.setSendBuf(reply(353, c.getNickName(), nameReply));

@@ -6,7 +6,7 @@ Channel::Channel(std::string n, int user_fd) : name(n), passwd(""), oper_fd(user
 
 Channel::Channel(std::string n, std::string key, int user_fd) : name(n), passwd(key), oper_fd(user_fd), client_list() {}
 
-Channel::~Channel() { std::cout << this->getChannelName() << " destroyed" << std::endl; }
+Channel::~Channel() { std::cout << this->getChannelName() << " is destroyed" << std::endl; }
 
 std::string Channel::getChannelName()
 {
@@ -40,13 +40,11 @@ void Channel::removeClient(int fd)
 
 void Channel::removeClient(std::string name)
 {
-	std::cout << this->client_list.size() << std::endl;
 	std::map<int, std::string>::iterator it = this->client_list.begin();
 	for (; it != this->client_list.end(); it++)
 	{
 		if (name == (*it).second)
 		{
-			std::cout << this->client_list.size() << std::endl;
 			this->client_list.erase(it);
 			it--;
 		}
