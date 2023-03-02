@@ -7,7 +7,6 @@ std::string	reply(int replyNum, std::string cName, std::string msg)
 
 	ss << ":ircserv " << replyNum << " " << cName << " " << msg;
 
-	std::cout << "[" << msg << "]" << std::endl;
 	switch (replyNum)
 	{
 	case 001:
@@ -73,6 +72,5 @@ std::string	reply(int replyNum, std::string cName, std::string msg)
 	default:
 		break;
 	}
-	std::cout << "reply : [" << ss.str() << "]" << std::endl;
 	return (ss.str());
 }

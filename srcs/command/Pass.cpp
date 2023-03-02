@@ -17,12 +17,8 @@ void	cmdPass(Command cmd, int fd)
 		}
 		for (; it < cmd.getParams().end(); it++)
 		{		
-			std::cout << "server_pass : [" << cmd.getServer().getPass() << std::endl;
-			std::cout << "input_pass : [" << *it << std::endl;
-
 			if (cmd.getServer().getPass() == *it)
 				c.setUserState(PWSET);
-			std::cout << "State : " << c.getUserState() << std::endl;
 		}
 	}
 	else if (c.getUserState() == REGISTER)

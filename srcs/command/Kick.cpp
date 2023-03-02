@@ -89,7 +89,6 @@ void	cmdKick(Command cmd, int fd)
 				msg += *it;
 			}
 			msg += "\r\n";
-			std::cout << msg << std::endl;
 			broadcast(cmd.getServer().getChannels(), channel_name, msg, s);
 	
 			// 클라이언트의 myChannelList에서 해당 채널을 삭제.

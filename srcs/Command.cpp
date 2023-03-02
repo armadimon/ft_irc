@@ -26,7 +26,6 @@ Command::Command(std::string msg, Server *server)
 	std::vector<std::string>::iterator strIter = strList.begin();
 	for (; strIter < strList.end(); strIter++)
 	{
-		std::cout << "strIter : " << *strIter << std::endl;
 		if (strIter == strList.begin())
 			this->cmd = *strIter;
 		else
