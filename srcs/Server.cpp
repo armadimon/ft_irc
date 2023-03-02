@@ -136,9 +136,13 @@ void Server::clientWrite(int client_fd)
 {
 	int	r;
 	std::string msg = this->getClient(client_fd).msg;
+	// std::cout << "length : " << msg.length() << std::endl;
+	// std::cout << "size : " << msg.size() << std::endl;
+	std::cout << "write address : " << &msg << std::endl;
+	std::cout << "write size : " << msg.size() << std::endl;
+	std::cout << "msg length : " << msg.length() << std::endl;
 	if (msg.length() <= 0)
 		return ;
-	std::cout << "msg length : " << msg.length() << std::endl;
   	r = send(client_fd, msg.c_str(), msg.length(), 0);
 	std::cout << "error no : " << errno << std::endl;
 	std::cout << "r : " << r << std::endl;
@@ -147,7 +151,7 @@ void Server::clientWrite(int client_fd)
 		errno = 0;
 		return ;
 	}
-  	if (r <= 0)
+  	if (r <= 0 || this->getClient(client_fd).getUserState() == LOGOFF)
     {
 		FD_CLR(client_fd, &read_fds);
 		FD_CLR(client_fd, &write_fds);
@@ -180,8 +184,11 @@ void Server::run()
 		{
 			if (FD_ISSET(i, &cpy_write_fds))
 			{
-				clientWrite(i);
-				is_set--;
+				if (i != this->fd)
+				{
+					clientWrite(i);
+					is_set--;
+				}
 			}
 			if (FD_ISSET(i, &cpy_read_fds))
 			{

@@ -17,7 +17,7 @@ Client::Client(int fd)
 
 Client::Client() {}
 
-Client::~Client() {}
+Client::~Client() { std::cout << this->getNickName() + " is destroyed" << std::endl; }
 
 int	Client::parseMSG(Server *server, std::string tempStr)
 {

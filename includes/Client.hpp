@@ -18,6 +18,7 @@ enum State
 	READY,
 	REGISTER,
 	UNREGISTER,
+	LOGOFF,
 };
 
 class Server;
