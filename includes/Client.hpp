@@ -7,7 +7,7 @@
 # include <sys/socket.h>
 # include <unistd.h>
 # include <vector>
-
+# include <time.h>
 #include "Utils.hpp"
 #include "Command.hpp"
 
@@ -31,6 +31,7 @@ class Client
 		Client();
 		Client(int fd);
 		~Client();
+		std::string					msg;
 		char						*getBuf();
 		int							getFD();
 		int							parseMSG(Server *server, std::string tempStr);
@@ -47,6 +48,7 @@ class Client
 		std::string 				getHostName();
 		std::string 				getRealName();
 		State						getUserState();
+		void						clearBuf();
         std::vector<std::string>	getmyChannelList();
 		int							addmyChannelList(std::string channel_name);
 		void						removeChannelFromList(std::string channel_name);
@@ -60,7 +62,6 @@ class Client
 		int							fd;
 		// int							passwd;
 		State						userState;
-		std::string					msg;
 		std::string					hostName;
 		std::string					nickName;
 		std::string					userName;

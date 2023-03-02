@@ -48,6 +48,7 @@ class Server
 	void removeClientFromChannel(Channel *channel, int client_fd);
 	void removeClientFromAllChannels(int client_fd);
 	bool isExistChannel(std::string channel_name);
+	void clientWrite(int client_fd);
 
   private:
 	int			fd;
