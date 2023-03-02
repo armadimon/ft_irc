@@ -25,7 +25,7 @@ void Server::acceptClient()
 		throw std::runtime_error("Error: accept");
 	clients[new_socket] = new Client(new_socket);
 	clients[new_socket]->setHostName(host_str);
-	std::cout << "Client #" << new_socket << " is Connected!" << std::endl;
+	std::cout << COLOR_GREEN "Client #" << new_socket << " is Connected!" COLOR_RESET << std::endl;
 	if (new_socket > fd_max)
 		fd_max = new_socket;
 	FD_SET(new_socket, &read_fds);
@@ -116,7 +116,9 @@ void Server::clientRead(int client_fd)
 			delete clients[client_fd];
 			clients.erase(mapIter);
 		}
-    	printf("client #%d gone away\n", client_fd);
+		std::cout << COLOR_RED "client #";
+		std::cout << client_fd;
+		std::cout << " gone away" COLOR_RESET << std::endl;
 		return ;
     }
 	else
@@ -152,7 +154,9 @@ void Server::clientWrite(int client_fd)
 			delete clients[client_fd];
 			clients.erase(mapIter);
 		}
-    	printf("client #%d gone away\n", client_fd);
+    	std::cout << COLOR_RED "client #";
+		std::cout << client_fd;
+		std::cout << " gone away" COLOR_RESET << std::endl;
 		return ;
     }
 	this->getClient(client_fd).clearSendBuf();

@@ -48,6 +48,7 @@ int	Client::parseMSG(Server *server, std::string tempStr)
 		}
 		else
 		{
+			std::cout << "[" << this->getNickName() << "] " << *strIter << std::endl;
 			Command cmd(*strIter, server);
 			this->excute(cmd);
 		}
