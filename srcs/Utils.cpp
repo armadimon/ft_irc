@@ -46,7 +46,6 @@ void broadcast(std::map<std::string, Channel *> tempCh, std::string chName, std:
 	for (;clientIter != tempClient.end(); clientIter++)
 	{
 		s.getClient(clientIter->first).setSendBuf(msg);
-		// 요청한 클라이언트에게만 reply
 	}
 }
 

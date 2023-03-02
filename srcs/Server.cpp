@@ -57,7 +57,6 @@ void Server::createSocket()
 
 void Server::doSelect() {
 	is_set = select(fd_max + 1, &cpy_read_fds, &cpy_write_fds, NULL, NULL);
-	// std::cout << is_set << std::endl;
 	if (is_set == -1)
 		throw std::runtime_error("Error: select");
 }
@@ -99,16 +98,12 @@ void Server::clientRead(int client_fd)
 	char bufRead[513];
 
   	r = recv(client_fd, bufRead, 512, 0);
-	// std::cout << "client fd : " << client_fd << std::endl;
-	// std::cout << "error no : " << errno << std::endl;
-	// std::cout << "r : " << r << std::endl;
 	if ( errno == EAGAIN )
 	{
 		errno = 0;
 		return ;
 	}
-	// std::cout << "bufRead : " << bufRead << std::endl;
-  	if (r < 0)
+  	if (r <= 0)
     {
 		FD_CLR(client_fd, &read_fds);
 		FD_CLR(client_fd, &write_fds);
@@ -126,8 +121,6 @@ void Server::clientRead(int client_fd)
 	else
 	{
 		bufRead[r] = '\0';
-		// std::string tempStr(bufRead);
-		// this->getClient(client_fd).clearBuf();
 		this->clients[client_fd]->parseMSG(this, bufRead);
 	}
 }
@@ -165,7 +158,6 @@ void Server::clientWrite(int client_fd)
 void Server::run()
 {
 	createSocket();
-	std::cout << "serveraddress : " << this << std::endl;
 	while (true)
 	{
 		FD_ZERO(&cpy_read_fds);
