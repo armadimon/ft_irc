@@ -11,7 +11,6 @@ void	cmdPass(Command cmd, int fd)
 	{
 		if (params.size() < 1)
 		{
-			// ERR_NEEDMOREPARAMS 461
 			c.setSendBuf(reply(461, c.getNickName(), cmd.getCmd()));
 			return;
 		}

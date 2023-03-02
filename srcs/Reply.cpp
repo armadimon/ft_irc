@@ -6,7 +6,6 @@ std::string	reply(int replyNum, std::string cName, std::string msg)
 	std::stringstream ss;
 
 	ss << ":ircserv " << replyNum << " " << cName << " " << msg;
-
 	switch (replyNum)
 	{
 	case 001:

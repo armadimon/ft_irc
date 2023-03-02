@@ -103,8 +103,7 @@ void Server::clientRead(int client_fd)
 		errno = 0;
 		return ;
 	}
-
-  	if (r < 0)
+  	if (r <= 0)
     {
 		FD_CLR(client_fd, &read_fds);
 		FD_CLR(client_fd, &write_fds);
@@ -124,8 +123,6 @@ void Server::clientRead(int client_fd)
 	else
 	{
 		bufRead[r] = '\0';
-		// std::string tempStr(bufRead);
-		// this->getClient(client_fd).clearBuf();
 		this->clients[client_fd]->parseMSG(this, bufRead);
 	}
 }
