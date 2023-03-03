@@ -1,5 +1,6 @@
 #include "../../includes/Command.hpp"
 
+// NICK <nickname>
 void	cmdNick(Command cmd, int fd)
 {
 	std::vector<std::string> params = cmd.getParams();

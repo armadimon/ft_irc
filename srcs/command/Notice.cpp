@@ -1,5 +1,6 @@
 #include "../../includes/Command.hpp"
 
+// NOTICE <nickname> <text>
 void	cmdNotice(Command cmd, int fd)
 {
 	std::vector<std::string> params = cmd.getParams();

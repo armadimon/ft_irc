@@ -35,9 +35,9 @@ static std::string attachClientList(std::map<std::string, Channel *> tempCh, std
 	return (nameReply);
 }
 
+// JOIN <channel>{,<channel>}
 void cmdJoin(Command cmd, int fd)
 {
-	// if (str.size() < 1) 461 ERR_NEEDMOREPARAMS
 	std::vector<std::string> params = cmd.getParams();
 	Server &s = cmd.getServer();
 	Client &c = s.getClient(fd);
@@ -46,7 +46,7 @@ void cmdJoin(Command cmd, int fd)
 	std::vector<std::string> channels_passwd;
 
 	if (cmd.getParams().size() < 1)
-		c.setSendBuf(reply(461, c.getNickName(), cmd.getCmd()));
+		c.setSendBuf(reply(461, c.getNickName(), cmd.getCmd())); // 461 ERR_NEEDMOREPARAMS
     if (c.getUserState() == REGISTER)
     {
 		channels_name = string_split(params[0], ",");
