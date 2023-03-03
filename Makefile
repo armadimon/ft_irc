@@ -5,21 +5,36 @@ CXX = c++
 FLAGS = -g -Wall -Wextra -Werror -std=c++98
 
 SRC =	main.cpp \
+		srcs/Utils.cpp \
 		srcs/Client.cpp \
-		srcs/Server.cpp
+		srcs/Server.cpp \
+		srcs/Channel.cpp \
+		srcs/Reply.cpp \
+		srcs/Command.cpp \
+
+CMD_SRC =	srcs/command/Join.cpp \
+			srcs/command/Nick.cpp \
+			srcs/command/Pass.cpp \
+			srcs/command/PrivMsg.cpp \
+			srcs/command/User.cpp \
+			srcs/command/Notice.cpp \
+			srcs/command/Kick.cpp \
+			srcs/command/Part.cpp \
+			srcs/command/Quit.cpp \
 
 OBJ = $(SRC:.cpp=.o)
+CMD_OBJ = $(CMD_SRC:.cpp=.o)
 
 .cpp.o :
 	$(CXX) $(FLAGS) -c $< -o $@
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	$(CXX) $(FLAGS) $(OBJ) -o $(NAME)
+$(NAME): $(OBJ) $(CMD_OBJ)
+	$(CXX) $(FLAGS) $(OBJ) $(CMD_OBJ) -o $(NAME)
 
 clean:
-	rm -rf $(OBJ)
+	rm -rf $(OBJ) $(CMD_OBJ)
 
 fclean: clean
 	rm -rf $(NAME)

@@ -11,25 +11,44 @@
 #include <sys/select.h>
 #include <fcntl.h>
 
+
 #include "Client.hpp"
+#include "Utils.hpp"
+#include "Channel.hpp"
 
 #define MAX_FD	1024
 
+class Channel;
+
 class Server
-{
+{ 	
   public:
 	Server();
 	~Server();
-	Client *getClient(int client_fd);
+	Client &getClient(int client_fd);
+	Client &getClient(std::string name);
+	Client *findClient(std::string name);
+	std::map<int, Client *> getClients();
+	void removeClient(int fd);
+	bool isAlreadyUsed(std::string client_name);
+	std::map<std::string, Channel *> &getChannels();
+	Channel *getChannel(std::string chName);
+	void setChannel(std::string chName, int fd);
+	void setChannel(std::string chName, std::string key,int fd);
+	void addChannel();
 	void setClient(std::map<int, Client> c);
 	void clientRead(int client_fd);
+	std::string	getPass();
 	void setPass(char *pw);
 	void setPort(char *port);
 	void createSocket();
 	void doSelect();
 	void acceptClient();
-	void start();
-
+	void run();
+	void removeClientFromChannel(Channel *channel, int client_fd);
+	void removeClientFromAllChannels(int client_fd);
+	bool isExistChannel(std::string channel_name);
+	void clientWrite(int client_fd);
 
   private:
 	int			fd;
@@ -41,7 +60,10 @@ class Server
 	fd_set		cpy_write_fds;
 	fd_set		read_fds;
 	fd_set		write_fds;
+
 	std::map<int, Client *> clients;
+	std::map<std::string, Channel *> channels;
+
 	std::string password; // 서버 패스워드
 };
 

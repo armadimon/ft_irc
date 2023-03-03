@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
     server.setPort(argv[1]);
     server.setPass(argv[2]);
     try {
-        server.start();
+        server.run();
     }
     catch (std::runtime_error &e) {
         std::cout << e.what() << std::endl;
