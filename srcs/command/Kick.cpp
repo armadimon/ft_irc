@@ -8,7 +8,8 @@ void	cmdKick(Command cmd, int fd)
 	if (params.size() == 3)	comment = params[2];
 	else if (!cmd.getTrailing().empty()) comment = cmd.getTrailing();
 
-	Client &c = cmd.getServer().getClient(fd);
+	Server &s = cmd.getServer();
+	Client &c = s.getClient(fd);
 	std::string channel_name;
 	std::vector<std::string> tmp_users;
 	std::vector<std::string> user_names;
@@ -17,13 +18,13 @@ void	cmdKick(Command cmd, int fd)
 	{
 		if (params.size() < 2)
 		{
-			reply(fd, 461, c.getNickName(), cmd.getCmd());
+			c.setSendBuf(reply(461, c.getNickName(), cmd.getCmd()));
 			return;
 		}
 		channel_name = params[0];
 		if (channel_name.size() > 50)
 		{
-			reply(fd, 476, c.getNickName(), channel_name);   // ERR_BADCHANMASK 476
+			c.setSendBuf(reply(476, c.getNickName(), channel_name));   // ERR_BADCHANMASK 476
 			return;
 		}
 
@@ -31,7 +32,7 @@ void	cmdKick(Command cmd, int fd)
 		if (!cmd.getServer().isExistChannel(channel_name))
 		{
 			// ERR_NOSUCHCHANNEL
-			reply(fd, 403, c.getNickName(), channel_name);
+			c.setSendBuf(reply(403, c.getNickName(), channel_name));
 			return;
 		}
 		Channel *chan = cmd.getServer().getChannel(channel_name);
@@ -39,13 +40,13 @@ void	cmdKick(Command cmd, int fd)
 		if (fd != chan->getOperatorFD())
 		{
 			// ERR_CHANOPRIVSNEEDED
-			reply(fd, 482, c.getNickName(), channel_name);
+			c.setSendBuf(reply(482, c.getNickName(), channel_name));
 			return;
 		}
 
 		if (!chan->isExistClient(c.getNickName()))
 		{
-			reply(fd, 442, c.getNickName(), channel_name);
+			c.setSendBuf(reply(442, c.getNickName(), channel_name));
 			return;
 		}
 
@@ -54,7 +55,7 @@ void	cmdKick(Command cmd, int fd)
 		{
 			// 유저가 없으면 ERR_NOTONCHANNEL
 			if (!chan->isExistClient(tmp_users[i]))
-				reply(fd, 441, c.getNickName(), tmp_users[i] + " " + tmp_users[i] + " " + channel_name);
+				c.setSendBuf(reply(441, c.getNickName(), tmp_users[i] + " " + channel_name));
 			else
 				user_names.push_back(tmp_users[i]);
 		}
@@ -63,13 +64,7 @@ void	cmdKick(Command cmd, int fd)
 		for (; it != user_names.end(); it++)
 		{
 			Client& client = cmd.getServer().getClient(*it);
-			std::string	prefix = ":";
-			prefix += c.getNickName();
-			prefix += "!";
-			prefix += c.getUserName();
-			prefix += "@";
-			prefix += c.getHostName();
-			prefix += " ";
+			std::string	prefix = makePrefix(c);
 
 			std::string msg = "";
 			msg += prefix;
@@ -88,8 +83,7 @@ void	cmdKick(Command cmd, int fd)
 				msg += *it;
 			}
 			msg += "\r\n";
-			std::cout << msg << std::endl;
-			broadcast(cmd.getServer().getChannels(), channel_name, msg);
+			broadcast(cmd.getServer().getChannels(), channel_name, msg, s);
 	
 			// 클라이언트의 myChannelList에서 해당 채널을 삭제.
 			client.removeChannelFromList(channel_name);

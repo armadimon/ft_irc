@@ -35,9 +35,9 @@ static std::string attachClientList(std::map<std::string, Channel *> tempCh, std
 	return (nameReply);
 }
 
+// JOIN <channel>{,<channel>}
 void cmdJoin(Command cmd, int fd)
 {
-	// if (str.size() < 1) 461 ERR_NEEDMOREPARAMS
 	std::vector<std::string> params = cmd.getParams();
 	Server &s = cmd.getServer();
 	Client &c = s.getClient(fd);
@@ -46,7 +46,7 @@ void cmdJoin(Command cmd, int fd)
 	std::vector<std::string> channels_passwd;
 
 	if (cmd.getParams().size() < 1)
-		reply(fd, 461, c.getNickName(), cmd.getCmd());
+		c.setSendBuf(reply(461, c.getNickName(), cmd.getCmd())); // 461 ERR_NEEDMOREPARAMS
     if (c.getUserState() == REGISTER)
     {
 		channels_name = string_split(params[0], ",");
@@ -58,7 +58,7 @@ void cmdJoin(Command cmd, int fd)
 		{
 			if (channels_name[i].size() > 50 || channels_name[i].find("#") != 0)
 			{
-				reply(fd, 476, c.getNickName(), channels_name[i]);   // ERR_BADCHANMASK 476
+				c.setSendBuf(reply(476, c.getNickName(), channels_name[i]));   // ERR_BADCHANMASK 476
 				return;
 			}
 			std::string key = keyIter < channels_passwd.end() ? *keyIter++ : "";
@@ -70,19 +70,19 @@ void cmdJoin(Command cmd, int fd)
 
 			if (c.getmyChannelList().size() > 9 && c.findChannelFromList(channels_name[i]) == 0)
 			{
-				reply(fd, 405, c.getNickName(), channels_name[i]);
+				c.setSendBuf(reply(405, c.getNickName(), channels_name[i]));
 				continue;
 			}
 			if (channels_name[i].size() > 0 && channels_name[i][0] != '#')
 			{
-				reply(fd, 476, c.getNickName(), channels_name[i]);
+				c.setSendBuf(reply(476, c.getNickName(), channels_name[i]));
 				continue;
 			}
 			if (ChIt != tempCh.end())
 			{
 				if (s.getChannel(channels_name[i])->getPassword() != key)
 				{
-					reply(fd, 475, c.getNickName(), channels_name[i]);
+					c.setSendBuf(reply(475, c.getNickName(), channels_name[i]));
 					continue;
 				}
 				s.getChannels()[channels_name[i]]->addClient(fd, c.getNickName());
@@ -91,23 +91,20 @@ void cmdJoin(Command cmd, int fd)
 			}
 			else
 			{
-				// 새로 채널 만들기
 				if (key != "")
 					s.setChannel(channels_name[i], channels_passwd[i], fd);
 				else
 					s.setChannel(channels_name[i], fd);
 				s.getChannels()[channels_name[i]]->addClient(fd, c.getNickName());
 				c.addmyChannelList(channels_name[i]);
-				// 해당 클라이언트가 join했다고 채널에 메세지 날리기
 			}
 			std::string	prefix = makePrefix(c);
 			std::string msg = "";
 			msg += prefix + "JOIN :" + channels_name[i] + "\r\n";
-			std::cout << "msg : [" << msg <<  "]" << std::endl;
-			broadcast(tempCh, channels_name[i], msg);
+			broadcast(tempCh, channels_name[i], msg, s);
 			nameReply = attachClientList(tempCh, channels_name[i], nameReply);
-			reply(fd, 353, c.getNickName(), nameReply);
-			reply(fd, 366, c.getNickName(), eonReply);
+			c.setSendBuf(reply(353, c.getNickName(), nameReply));
+			c.setSendBuf(reply(366, c.getNickName(), eonReply));
 			if (keyIter < channels_passwd.end())
 				keyIter++;
 		}

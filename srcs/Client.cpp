@@ -1,15 +1,15 @@
 #include "../includes/Client.hpp"
 
 Client::Client(int fd)
-	:fd(fd), userState(DEFAULT)
+	: fd(fd),sendBuf(""),userState(DEFAULT)
 {
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	cmdList["PASS"] = cmdPass;
 	cmdList["USER"] = cmdUser;
 	cmdList["NICK"] = cmdNick;
 	cmdList["PRIVMSG"] = cmdPrivMsg;
-	cmdList["NOTICE"] = cmdNotice;
 	cmdList["JOIN"] = cmdJoin;
+	cmdList["NOTICE"] = cmdNotice;
 	cmdList["KICK"] = cmdKick;
 	cmdList["PART"] = cmdPart;
 	cmdList["QUIT"] = cmdQuit;
@@ -17,7 +17,7 @@ Client::Client(int fd)
 
 Client::Client() {}
 
-Client::~Client() {}
+Client::~Client() { std::cout << this->getNickName() + " is destroyed" << std::endl; }
 
 int	Client::parseMSG(Server *server, std::string tempStr)
 {
@@ -48,6 +48,7 @@ int	Client::parseMSG(Server *server, std::string tempStr)
 		}
 		else
 		{
+			std::cout << "[" << this->getNickName() << "] " << *strIter << std::endl;
 			Command cmd(*strIter, server);
 			this->excute(cmd);
 		}
@@ -80,7 +81,7 @@ void	Client::registerClient()
 	{
 		userState = REGISTER;
 		std::string str = ":welcome to IRC\r\n";
-		reply(fd, 001, nickName, str);
+		sendBuf += reply(001, nickName, str);
 	}
 }
 
@@ -113,6 +114,11 @@ int		Client::getFD()
 	return (this->fd);
 }
 
+std::string	Client::getSendBuf()
+{
+	return (this->sendBuf);
+}
+
 std::string Client::getUserName()
 {
 	return (this->userName);
@@ -140,6 +146,11 @@ std::vector<std::string>	Client::getmyChannelList()
 	return (this->myChannelList);
 }
 
+void Client::setSendBuf(std::string str)
+{
+	sendBuf += str;
+}
+
 void Client::setUserName(std::string str)
 {
 	userName = str;
@@ -163,6 +174,11 @@ void Client::setRealName(std::string str)
 void Client::setUserState(State state)
 {
 	userState = state;
+}
+
+void	Client::clearSendBuf()
+{
+	sendBuf.clear();
 }
 
 void	Client::removeChannelFromList(std::string channel_name)

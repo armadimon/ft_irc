@@ -18,6 +18,7 @@ enum State
 	READY,
 	REGISTER,
 	UNREGISTER,
+	LOGOFF,
 };
 
 class Server;
@@ -31,7 +32,6 @@ class Client
 		Client();
 		Client(int fd);
 		~Client();
-		std::string					msg;
 		char						*getBuf();
 		int							getFD();
 		int							parseMSG(Server *server, std::string tempStr);
@@ -43,12 +43,15 @@ class Client
 		void						setUserName(std::string str);
 		void						setHostName(std::string str);
 		void						setUserState(State state);
+		void						setSendBuf(std::string str);
+		std::string					getSendBuf();
 		std::string					getUserName();
 		std::string 				getNickName();
 		std::string 				getHostName();
 		std::string 				getRealName();
 		State						getUserState();
 		void						clearBuf();
+		void						clearSendBuf();
         std::vector<std::string>	getmyChannelList();
 		int							addmyChannelList(std::string channel_name);
 		void						removeChannelFromList(std::string channel_name);
@@ -61,6 +64,8 @@ class Client
 		// bool						isOperator; //방장이면 true
 		int							fd;
 		// int							passwd;
+		std::string					sendBuf;
+		std::string					msg;
 		State						userState;
 		std::string					hostName;
 		std::string					nickName;

@@ -15,6 +15,7 @@
 
 class Channel;
 class Client;
+class Server;
 
 std::vector<std::string> string_split(std::string str, const char* delimiter);
 
@@ -24,9 +25,9 @@ std::string &rtrim(std::string &s, std::string delimiter);
 
 const std::string &trim(std::string &s, std::string delimiter);
 
-void broadcast(std::map<std::string, Channel *> tempCh, std::string chName, std::string msg);
+void broadcast(std::map<std::string, Channel *> tempCh, std::string chName, std::string msg, Server &s);
 
-void	reply(int fd, int replyNum, std::string cName, std::string msg);
+std::string	reply(int replyNum, std::string cName, std::string msg);
 
 std::string	makePrefix(Client &c);
 

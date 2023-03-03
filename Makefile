@@ -16,8 +16,8 @@ CMD_SRC =	srcs/command/Join.cpp \
 			srcs/command/Nick.cpp \
 			srcs/command/Pass.cpp \
 			srcs/command/PrivMsg.cpp \
-			srcs/command/Notice.cpp \
 			srcs/command/User.cpp \
+			srcs/command/Notice.cpp \
 			srcs/command/Kick.cpp \
 			srcs/command/Part.cpp \
 			srcs/command/Quit.cpp \

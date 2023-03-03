@@ -25,7 +25,7 @@ void Server::acceptClient()
 		throw std::runtime_error("Error: accept");
 	clients[new_socket] = new Client(new_socket);
 	clients[new_socket]->setHostName(host_str);
-	std::cout << "Client #" << new_socket << " is Connected!" << std::endl;
+	std::cout << COLOR_GREEN "Client #" << new_socket << " is Connected!" COLOR_RESET << std::endl;
 	if (new_socket > fd_max)
 		fd_max = new_socket;
 	FD_SET(new_socket, &read_fds);
@@ -57,7 +57,6 @@ void Server::createSocket()
 
 void Server::doSelect() {
 	is_set = select(fd_max + 1, &cpy_read_fds, &cpy_write_fds, NULL, NULL);
-	// std::cout << is_set << std::endl;
 	if (is_set == -1)
 		throw std::runtime_error("Error: select");
 }
@@ -99,49 +98,6 @@ void Server::clientRead(int client_fd)
 	char bufRead[513];
 
   	r = recv(client_fd, bufRead, 512, 0);
-	// std::cout << "client fd : " << client_fd << std::endl;
-	// std::cout << "error no : " << errno << std::endl;
-	// std::cout << "r : " << r << std::endl;
-	if ( errno == EAGAIN )
-	{
-		errno = 0;
-		return ;
-	}
-	// std::cout << "bufRead : " << bufRead << std::endl;
-  	if (r < 0)
-    {
-		FD_CLR(client_fd, &read_fds);
-		FD_CLR(client_fd, &write_fds);
-    	close(client_fd);
-		removeClientFromAllChannels(client_fd);
-		std::map<int, Client *>::iterator mapIter = clients.find(client_fd);
-		if (mapIter != clients.end())
-		{
-			delete clients[client_fd];
-			clients.erase(mapIter);
-		}
-    	printf("client #%d gone away\n", client_fd);
-		return ;
-    }
-	else
-	{
-		bufRead[r] = '\0';
-		// std::string tempStr(bufRead);
-		// this->getClient(client_fd).clearBuf();
-		this->clients[client_fd]->parseMSG(this, bufRead);
-	}
-}
-
-void Server::clientWrite(int client_fd)
-{
-	int	r;
-	std::string msg = this->getClient(client_fd).msg;
-	if (msg.length() <= 0)
-		return ;
-	std::cout << "msg length : " << msg.length() << std::endl;
-  	r = send(client_fd, msg.c_str(), msg.length(), 0);
-	std::cout << "error no : " << errno << std::endl;
-	std::cout << "r : " << r << std::endl;
 	if ( errno == EAGAIN )
 	{
 		errno = 0;
@@ -159,10 +115,48 @@ void Server::clientWrite(int client_fd)
 			delete clients[client_fd];
 			clients.erase(mapIter);
 		}
-    	printf("client #%d gone away\n", client_fd);
+		std::cout << COLOR_RED "client #";
+		std::cout << client_fd;
+		std::cout << " gone away" COLOR_RESET << std::endl;
 		return ;
     }
-	this->getClient(client_fd).msg.clear();
+	else
+	{
+		bufRead[r] = '\0';
+		this->clients[client_fd]->parseMSG(this, bufRead);
+	}
+}
+
+void Server::clientWrite(int client_fd)
+{
+	int	r;
+	std::string msg = this->getClient(client_fd).getSendBuf();
+	if (msg.length() <= 0)
+		return ;
+  	r = send(client_fd, msg.c_str(), msg.length(), 0);
+	if ( errno == EAGAIN )
+	{
+		errno = 0;
+		return ;
+	}
+  	if (r <= 0 || this->getClient(client_fd).getUserState() == LOGOFF)
+    {
+		FD_CLR(client_fd, &read_fds);
+		FD_CLR(client_fd, &write_fds);
+    	close(client_fd);
+		removeClientFromAllChannels(client_fd);
+		std::map<int, Client *>::iterator mapIter = clients.find(client_fd);
+		if (mapIter != clients.end())
+		{
+			delete clients[client_fd];
+			clients.erase(mapIter);
+		}
+    	std::cout << COLOR_RED "client #";
+		std::cout << client_fd;
+		std::cout << " gone away" COLOR_RESET << std::endl;
+		return ;
+    }
+	this->getClient(client_fd).clearSendBuf();
 }
 
 void Server::run()
@@ -180,8 +174,11 @@ void Server::run()
 		{
 			if (FD_ISSET(i, &cpy_write_fds))
 			{
-				clientWrite(i);
-				is_set--;
+				if (i != this->fd)
+				{
+					clientWrite(i);
+					is_set--;
+				}
 			}
 			if (FD_ISSET(i, &cpy_read_fds))
 			{
@@ -192,7 +189,7 @@ void Server::run()
 				}
 				else
 				{
-					clientRead(clients.find(i)->second->getFD());
+					clientRead(i);
 					is_set--;
 				}
 			}
@@ -244,9 +241,7 @@ Client *Server::findClient(std::string name)
 void Server::removeClient(int fd)
 {
 	std::map<int, Client *>::iterator it = this->clients.find(fd);
-	// 모든 채널에서 해당 클라이언트 삭제
 	this->removeClientFromAllChannels(fd);
-	// 서버 목록에서 클라이언트 지우기
 	this->clients.erase(fd);
 	delete (*it).second;
 	close(fd);
@@ -288,7 +283,7 @@ void Server::setChannel(std::string chName, std::string key,int fd)
 	this->channels.insert(std::pair<std::string, Channel *>(chName, new Channel(chName, key, fd)));
 }
 
-/*ccccw
+/*
 METHOD :: SETTER
 */
 
