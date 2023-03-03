@@ -91,14 +91,12 @@ void cmdJoin(Command cmd, int fd)
 			}
 			else
 			{
-				// 새로 채널 만들기
 				if (key != "")
 					s.setChannel(channels_name[i], channels_passwd[i], fd);
 				else
 					s.setChannel(channels_name[i], fd);
 				s.getChannels()[channels_name[i]]->addClient(fd, c.getNickName());
 				c.addmyChannelList(channels_name[i]);
-				// 해당 클라이언트가 join했다고 채널에 메세지 날리기
 			}
 			std::string	prefix = makePrefix(c);
 			std::string msg = "";

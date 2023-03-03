@@ -1,6 +1,5 @@
 #include "../../includes/Command.hpp"
 
-// PART <channel>{,<channel>}
 void	cmdPart(Command cmd, int fd)
 {
 	std::vector<std::string> params = cmd.getParams();
@@ -42,14 +41,12 @@ void	cmdPart(Command cmd, int fd)
 			std::string	prefix = makePrefix(c);
 			std::string msg = "";
 			msg += prefix + "PART ";
-			// msg += channel_name;
 			if (comment.size() > 0)
 				msg += (*it) + " " + comment;
 			else
 				msg += (*it);
 			msg += "\r\n";
 			broadcast(s.getChannels(), *it, msg, s);
-			// 클라이언트의 myChannelList에서 해당 채널을 삭제.
 			c.removeChannelFromList(*it);		
 			s.removeClientFromChannel(chan, c.getFD());
 		}

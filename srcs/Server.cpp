@@ -241,9 +241,7 @@ Client *Server::findClient(std::string name)
 void Server::removeClient(int fd)
 {
 	std::map<int, Client *>::iterator it = this->clients.find(fd);
-	// 모든 채널에서 해당 클라이언트 삭제
 	this->removeClientFromAllChannels(fd);
-	// 서버 목록에서 클라이언트 지우기
 	this->clients.erase(fd);
 	delete (*it).second;
 	close(fd);
@@ -285,7 +283,7 @@ void Server::setChannel(std::string chName, std::string key,int fd)
 	this->channels.insert(std::pair<std::string, Channel *>(chName, new Channel(chName, key, fd)));
 }
 
-/*ccccw
+/*
 METHOD :: SETTER
 */
 
