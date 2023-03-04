@@ -9,7 +9,7 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 <br>
 
 ## 구현 기간
-2023/02/09 ~
+2023/02/09 ~ 2023/03/03
 
 <br>
 
@@ -89,5 +89,6 @@ Internet Relay Chat or IRC is a text-based communication protocol on the Interne
 * 테스트
 * 강제종료 후 leak 검사
 
-### TODO
+### 3월 3일 (금)
 * 평가 준비
+* 평가 완료
